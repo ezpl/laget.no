@@ -37,6 +37,11 @@ a { color: inherit; text-decoration: none; }
 
 ::selection { background: rgba(254, 165, 95, 0.28); }
 
+/* FocusOnNavigate flytter fokus til <h1> ved lasting/navigasjon (for
+   skjermlesere). Behold fokuset, men skjul den synlige ringen på
+   overskrifter — den skal ikke se ut som en markering av "laget.no". */
+h1:focus, h1:focus-visible { outline: none; }
+
 /* ---------- boot-skjerm (før Blazor er lastet) ---------- */
 .app-boot {
     position: fixed;

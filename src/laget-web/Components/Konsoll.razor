@@ -107,6 +107,7 @@
                 Print("tilgjengelige kommandoer:", "muted");
                 Print("  <span class=\"a\">help</span>       denne lista");
                 Print("  <span class=\"a\">ls</span>         list temaene");
+                Print("  <span class=\"a\">apper</span>      nyttige applikasjoner");
                 Print("  <span class=\"a\">open</span> &lt;navn&gt; åpne et tema (f.eks. <span class=\"a\">open bantu-kikuyu</span>)");
                 Print("  <span class=\"a\">whoami</span>     hvem er du");
                 Print("  <span class=\"a\">uname</span>      hva siden kjører på");
@@ -125,6 +126,14 @@
                 {
                     var status = t.Publisert ? "" : "  <span class=\"muted\">(kommer)</span>";
                     Print($"  <span class=\"g\">{Escape(t.Slug)}</span>  <span class=\"muted\">{Escape(t.Tag)}</span>{status}");
+                }
+                break;
+
+            case "apper":
+            case "apps":
+                foreach (var a in Apper.Alle)
+                {
+                    Print($"  <a class=\"a\" href=\"{a.Href}\" target=\"_blank\" rel=\"noopener\">{Escape(a.Navn)}</a>  <span class=\"muted\">{Escape(a.Om)}</span>");
                 }
                 break;
 

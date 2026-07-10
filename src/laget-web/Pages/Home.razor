@@ -6,7 +6,7 @@
 <div class="hei">
 
     <section>
-        <p class="eyebrow">Hei. Dette er</p>
+        <p class="eyebrow">// ett tema om gangen, gjort ordentlig</p>
         <h1 class="hero">laget<span class="dot">.</span>no</h1>
         <p class="hero-sub"><span class="prompt">&gt;</span> informasjon &amp; nyttige ting</p>
 
@@ -18,6 +18,16 @@
                 <span class="ln ln--indent">{ navn: <a class="accent tema-link" href="@t.Href" @onclick="() => Aapne(t)" @onclick:preventDefault>'@t.Slug'</a>, tag: <span class="accent">'@t.Tag'</span> },</span>
             }
             <span class="ln ln--indent coming">// flere kommer …</span>
+            <span class="ln">];</span>
+        </div>
+
+        <div class="codeblock">
+            <span class="ln comment">// nyttige applikasjoner</span>
+            <span class="ln"><span class="prompt">const</span> <span class="green">apper</span> = [</span>
+            @foreach (var a in Apper.Alle)
+            {
+                <span class="ln ln--indent">{ navn: <a class="accent tema-link" href="@a.Href" target="_blank" rel="noopener">'@a.Navn'</a>, om: <span class="accent">'@a.Om'</span> },</span>
+            }
             <span class="ln">];</span>
         </div>
 

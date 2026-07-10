@@ -39,3 +39,21 @@ public static class Temaer
             Ekstern: true),
     ];
 }
+
+/// <summary>En nyttig applikasjon / eksternt verktøy.</summary>
+/// <param name="Navn">Visningsnavn (vertsnavn e.l.).</param>
+/// <param name="Om">Kort hva det er.</param>
+/// <param name="Href">Ekstern lenke (åpnes i ny fane).</param>
+public record App(string Navn, string Om, string Href);
+
+/// <summary>
+/// Registeret over nyttige applikasjoner — brukes av app-seksjonen på
+/// forsiden og <c>apper</c>-kommandoen i terminalen. Legg til én linje her.
+/// </summary>
+public static class Apper
+{
+    public static readonly IReadOnlyList<App> Alle =
+    [
+        new App("0z0.xyz", "nyttige apper & verktøy", "https://0z0.xyz"),
+    ];
+}
