@@ -12,9 +12,12 @@ Live: <https://www.laget.no> · Repo: <https://github.com/ezpl/laget.no>
 src/laget-web/            Blazor WASM-app (startsiden = "skallet")
   Pages/                  _hei (Home), _tema, _om-siden, _kontakt
   Components/Snake.razor  snake-spillet (ren C#)
+  Components/Konsoll.razor skjult terminal (easter egg) — trykk ` (backtick)
+  KonsollBus.cs           bro fra JS-hurtigtast til terminal-komponenten
   Layout/MainLayout.razor faner (topp) + statuslinje (bunn)
   Models/Tema.cs          registeret over temaene — én kilde
   wwwroot/                index.html, css/app.css (Grafitt-tema)
+  wwwroot/js/laget.js     konsoll-hilsen, backtick-hurtigtast, matrix-effekt
 static/
   bantu-expansion/        tema: Bantu & kikuyu (selvstendig statisk infografikk)
 .github/workflows/deploy.yml   bygger + deployer til GitHub Pages ved push til main
@@ -56,6 +59,16 @@ cp -r static/. publish/wwwroot/
 Push til `main` → GitHub Actions (`.github/workflows/deploy.yml`) bygger appen,
 setter sammen web-roten (statiske tema + `.nojekyll` + `CNAME` + `404.html` for
 SPA-fallback) og publiserer til GitHub Pages. Ingen manuelle steg.
+
+Appen publiseres med `InvariantGlobalization` (dropper ICU-globaliseringsdata,
+~1,5 MB spart) og standard IL-trimming for kortere lastetid.
+
+### Påskeegg 🥚
+
+Trykk `` ` `` (backtick) hvor som helst — eller `>_` i statuslinja — for en
+skjult terminal med kommandoer (`help`, `ls`, `open <tema>`, `matrix`, …).
+Skrevet i C#; kommandotolkeren ligger i `Components/Konsoll.razor`. Åpne også
+DevTools-konsollen for en hilsen.
 
 ### Domene (Cloudflare)
 

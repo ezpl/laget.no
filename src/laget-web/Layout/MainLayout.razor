@@ -29,8 +29,12 @@
             <span>.ezpl</span>
         </a>
         <span class="statusbar__spacer"></span>
+        <button class="statusbar__term" @onclick="() => KonsollBus.Toggle()"
+                title="Terminal (trykk `)" aria-label="Åpne terminal">&gt;_</button>
         <span class="statusbar__end"><span class="dot">●</span> www.laget.no</span>
     </footer>
+
+    <Konsoll />
 
 </div>
 

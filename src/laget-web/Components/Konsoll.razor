@@ -1,0 +1,229 @@
+@implements IDisposable
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+@if (_open)
+{
+    <div class="konsoll" @onclick="Close">
+        <div class="konsoll__win" @onclick:stopPropagation>
+            <div class="konsoll__bar">
+                <span class="konsoll__dot"></span>
+                <span class="konsoll__title">gjest@@laget.no — ~</span>
+                <button class="konsoll__x" @onclick="Close" aria-label="Lukk">✕</button>
+            </div>
+
+            <div class="konsoll__out" @ref="_outEl">
+                @foreach (var line in _lines)
+                {
+                    <div class="@($"kl {line.Css}")">@((MarkupString)line.Html)</div>
+                }
+            </div>
+
+            <div class="konsoll__in">
+                <span class="konsoll__prompt">gjest@@laget.no:~$</span>
+                <input @ref="_inputEl" @bind="_input" @bind:event="oninput"
+                       @onkeydown="OnKey" class="konsoll__field"
+                       autocomplete="off" autocapitalize="off"
+                       spellcheck="false" aria-label="Terminal" />
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private sealed record Line(string Html, string Css = "");
+
+    private bool _open;
+    private string _input = "";
+    private readonly List<Line> _lines = new();
+    private readonly List<string> _history = new();
+    private int _histIndex;
+    private ElementReference _inputEl;
+    private ElementReference _outEl;
+    private bool _focusQueued;
+
+    protected override void OnInitialized()
+    {
+        KonsollBus.ToggleRequested += Toggle;
+        Print("laget.no terminal — skriv <span class=\"a\">help</span> for kommandoer. Lukk med <span class=\"a\">Esc</span>.", "muted");
+    }
+
+    private void Toggle()
+    {
+        _open = !_open;
+        if (_open) _focusQueued = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void Close()
+    {
+        _open = false;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnKey(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "Enter":
+                await Run(_input);
+                _input = "";
+                break;
+            case "Escape":
+                Close();
+                break;
+            case "ArrowUp":
+                Recall(-1);
+                break;
+            case "ArrowDown":
+                Recall(1);
+                break;
+        }
+    }
+
+    private void Recall(int delta)
+    {
+        if (_history.Count == 0) return;
+        _histIndex = Math.Clamp(_histIndex + delta, 0, _history.Count);
+        _input = _histIndex < _history.Count ? _history[_histIndex] : "";
+    }
+
+    private async Task Run(string raw)
+    {
+        var cmd = raw.Trim();
+        Print($"<span class=\"p\">gjest@laget.no:~$</span> {Escape(cmd)}");
+        if (cmd.Length == 0) return;
+
+        _history.Add(cmd);
+        _histIndex = _history.Count;
+
+        var parts = cmd.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+        var name = parts[0].ToLowerInvariant();
+        var arg = parts.Length > 1 ? parts[1].Trim() : "";
+
+        switch (name)
+        {
+            case "help":
+                Print("tilgjengelige kommandoer:", "muted");
+                Print("  <span class=\"a\">help</span>       denne lista");
+                Print("  <span class=\"a\">ls</span>         list temaene");
+                Print("  <span class=\"a\">open</span> &lt;navn&gt; åpne et tema (f.eks. <span class=\"a\">open bantu-kikuyu</span>)");
+                Print("  <span class=\"a\">whoami</span>     hvem er du");
+                Print("  <span class=\"a\">uname</span>      hva siden kjører på");
+                Print("  <span class=\"a\">date</span>       klokka nå");
+                Print("  <span class=\"a\">echo</span> &lt;tekst&gt; skriv tilbake");
+                Print("  <span class=\"a\">snake</span>      🐍");
+                Print("  <span class=\"a\">matrix</span>     følg den hvite kaninen");
+                Print("  <span class=\"a\">github</span> · <span class=\"a\">discord</span>   finn meg");
+                Print("  <span class=\"a\">clear</span>      tøm skjermen");
+                Print("  <span class=\"a\">exit</span>       lukk terminalen");
+                break;
+
+            case "ls":
+            case "tema":
+                foreach (var t in Temaer.Alle)
+                {
+                    var status = t.Publisert ? "" : "  <span class=\"muted\">(kommer)</span>";
+                    Print($"  <span class=\"g\">{Escape(t.Slug)}</span>  <span class=\"muted\">{Escape(t.Tag)}</span>{status}");
+                }
+                break;
+
+            case "open":
+            case "cd":
+                var match = Temaer.Alle.FirstOrDefault(t =>
+                    t.Publisert && string.Equals(t.Slug, arg, StringComparison.OrdinalIgnoreCase));
+                if (match is null)
+                {
+                    Print($"fant ikke tema: <span class=\"a\">{Escape(arg)}</span>. prøv <span class=\"a\">ls</span>.", "err");
+                }
+                else
+                {
+                    Print($"åpner <span class=\"g\">{Escape(match.Slug)}</span> …");
+                    Close();
+                    Nav.NavigateTo(match.Href, forceLoad: match.Ekstern);
+                }
+                break;
+
+            case "whoami":
+                Print("gjest — velkommen innom 👋");
+                break;
+
+            case "uname":
+                Print("laget.no · Blazor WebAssembly · .NET 10 · C# · GitHub Pages");
+                break;
+
+            case "date":
+            case "klokke":
+                Print(NorskDato(DateTime.Now));
+                break;
+
+            case "echo":
+                Print(Escape(arg));
+                break;
+
+            case "snake":
+                Print("🐍 slangen bor på forsiden — piltaster styrer. Lykke til!");
+                break;
+
+            case "matrix":
+                Print("wake up, Neo …", "g");
+                await JS.InvokeVoidAsync("lagetMatrix", 6);
+                break;
+
+            case "github":
+                Print("→ <a class=\"a\" href=\"https://github.com/ezpl\" target=\"_blank\" rel=\"noopener\">github.com/ezpl</a>");
+                break;
+
+            case "discord":
+                Print("→ <a class=\"a\" href=\"https://discord.com/users/705758226058313730\" target=\"_blank\" rel=\"noopener\">.ezpl</a>");
+                break;
+
+            case "sudo":
+                Print("gjest er ikke i sudoers-fila. Hendelsen er rapportert.", "err");
+                break;
+
+            case "clear":
+            case "cls":
+                _lines.Clear();
+                break;
+
+            case "exit":
+            case "quit":
+                Close();
+                break;
+
+            default:
+                Print($"kommando ikke funnet: <span class=\"a\">{Escape(name)}</span>. prøv <span class=\"a\">help</span>.", "err");
+                break;
+        }
+    }
+
+    private void Print(string html, string css = "") => _lines.Add(new Line(html, css));
+
+    // Norsk dato uten ICU (siden appen kjører med InvariantGlobalization).
+    private static string NorskDato(DateTime d)
+    {
+        string[] dager = { "søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag" };
+        string[] mnd = { "januar", "februar", "mars", "april", "mai", "juni",
+                         "juli", "august", "september", "oktober", "november", "desember" };
+        return $"{dager[(int)d.DayOfWeek]} {d.Day}. {mnd[d.Month - 1]} {d.Year}, {d:HH:mm:ss}";
+    }
+
+    private static string Escape(string s) => s
+        .Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_focusQueued)
+        {
+            _focusQueued = false;
+            try { await _inputEl.FocusAsync(); } catch { /* elementet kan være borte */ }
+        }
+        if (_open)
+        {
+            await JS.InvokeVoidAsync("lagetScrollBottom", _outEl);
+        }
+    }
+
+    public void Dispose() => KonsollBus.ToggleRequested -= Toggle;
+}
