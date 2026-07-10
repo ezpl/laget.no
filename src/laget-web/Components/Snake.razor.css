@@ -1,0 +1,105 @@
+.game {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    align-self: start;
+    max-width: 340px;
+    width: 100%;
+}
+
+.game__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--muted);
+}
+.game__file { display: flex; align-items: center; gap: 8px; }
+.game__dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+}
+.game__score { color: var(--text); }
+
+.game__stage {
+    position: relative;
+    padding: 16px;
+    background:
+        radial-gradient(120% 120% at 80% 0%, rgba(67, 217, 173, 0.06), transparent 60%),
+        var(--panel-2);
+}
+
+.snake-board {
+    --cell: 17px;
+    display: grid;
+    grid-template-columns: repeat(15, var(--cell));
+    grid-auto-rows: var(--cell);
+    gap: 2px;
+    justify-content: center;
+    outline: none;
+}
+.snake-board:focus-visible {
+    box-shadow: 0 0 0 2px rgba(254, 165, 95, 0.5);
+    border-radius: 4px;
+}
+
+.cell {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 3px;
+}
+.cell--snake { background: var(--green); }
+.cell--head  { background: #6ff0c7; box-shadow: 0 0 6px rgba(67, 217, 173, 0.6); }
+.cell--food  { background: var(--orange); border-radius: 50%; }
+
+.game__overlay {
+    position: absolute;
+    inset: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(11, 11, 13, 0.82);
+    backdrop-filter: blur(2px);
+    border-radius: 6px;
+    text-align: center;
+}
+.game__msg { font-size: 20px; font-weight: 600; letter-spacing: 0.05em; }
+.game__sub { font-size: 12.5px; }
+
+.game__btn {
+    font-family: inherit;
+    font-size: 13px;
+    color: #01080e;
+    background: var(--orange);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.1s ease;
+}
+.game__btn:hover { filter: brightness(1.08); }
+.game__btn:active { transform: scale(0.97); }
+
+.game__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+}
+.game__keys { display: flex; gap: 4px; }
+.game__keys kbd {
+    font-family: inherit;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+}

@@ -1,7 +1,35 @@
-﻿@page "/"
+@page "/"
+@inject NavigationManager Nav
 
-<PageTitle>Home</PageTitle>
+<PageTitle>laget.no — informasjon &amp; nyttige ting</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="hei">
 
-Welcome to your new app.
+    <section>
+        <p class="eyebrow">Hei. Dette er</p>
+        <h1 class="hero">laget<span class="dot">.</span>no</h1>
+        <p class="hero-sub"><span class="prompt">&gt;</span> informasjon &amp; nyttige ting</p>
+
+        <div class="codeblock">
+            <span class="ln comment">// temaene på siden — åpne en under _tema</span>
+            <span class="ln"><span class="prompt">const</span> <span class="green">tema</span> = [</span>
+            @foreach (var t in Temaer.Alle.Where(t => t.Publisert))
+            {
+                <span class="ln ln--indent">{ navn: <a class="accent tema-link" href="@t.Href" @onclick="() => Aapne(t)" @onclick:preventDefault>'@t.Slug'</a>, tag: <span class="accent">'@t.Tag'</span> },</span>
+            }
+            <span class="ln ln--indent coming">// flere kommer …</span>
+            <span class="ln">];</span>
+        </div>
+
+        <p class="hint">
+            Tips: mens du er her — <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd> styrer slangen.
+        </p>
+    </section>
+
+    <Snake />
+
+</div>
+
+@code {
+    private void Aapne(Models.Tema t) => Nav.NavigateTo(t.Href, forceLoad: t.Ekstern);
+}

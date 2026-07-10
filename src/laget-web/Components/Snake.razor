@@ -1,0 +1,207 @@
+@implements IDisposable
+
+<aside class="game" aria-label="Snake-spill">
+    <div class="game__bar">
+        <span class="game__file"><span class="game__dot"></span>snake.cs</span>
+        <span class="game__score">score: @_score</span>
+    </div>
+
+    <div class="game__stage">
+        <div class="snake-board" tabindex="0" @ref="_board"
+             @onkeydown="OnKey" @onkeydown:preventDefault="Capture"
+             role="application" aria-label="Snake-brett — bruk piltastene">
+            @{ var body = new HashSet<(int, int)>(_snake); }
+            @for (var y = 0; y < Size; y++)
+            {
+                @for (var x = 0; x < Size; x++)
+                {
+                    <div class="@CellClass(x, y, body)"></div>
+                }
+            }
+        </div>
+
+        @if (_state != GameState.Playing)
+        {
+            <div class="game__overlay">
+                @switch (_state)
+                {
+                    case GameState.Idle:
+                        <p class="game__msg comment">// et lite avbrekk</p>
+                        <button class="game__btn" @onclick="Start">start-spillet</button>
+                        break;
+                    case GameState.Dead:
+                        <p class="game__msg accent">GAME OVER</p>
+                        <p class="game__sub comment">score: @_score @(_best > 0 ? $"· best: {_best}" : "")</p>
+                        <button class="game__btn" @onclick="Start">prøv-igjen</button>
+                        break;
+                    case GameState.Won:
+                        <p class="game__msg green">BRA JOBBA!</p>
+                        <p class="game__sub comment">du fylte hele brettet</p>
+                        <button class="game__btn" @onclick="Start">spill-igjen</button>
+                        break;
+                }
+            </div>
+        }
+    </div>
+
+    <div class="game__foot comment">
+        <span>// piltaster styrer</span>
+        <span class="game__keys" aria-hidden="true">
+            <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
+        </span>
+    </div>
+</aside>
+
+@code {
+    private enum GameState { Idle, Playing, Dead, Won }
+
+    private const int Size = 15;
+    private const int TickMs = 120;
+
+    private readonly List<(int x, int y)> _snake = new();
+    private (int x, int y) _dir = (1, 0);
+    private (int x, int y) _pendingDir = (1, 0);
+    private (int x, int y) _food;
+    private GameState _state = GameState.Idle;
+    private int _score;
+    private int _best;
+
+    private System.Timers.Timer? _timer;
+    private readonly Random _rng = new();
+    private ElementReference _board;
+
+    // Fang tastetrykk (og hindre at piltaster ruller siden) mens man spiller.
+    private bool Capture => _state == GameState.Playing;
+
+    private async Task Start()
+    {
+        _snake.Clear();
+        _snake.Add((7, 7));
+        _snake.Add((6, 7));
+        _snake.Add((5, 7));
+        _dir = (1, 0);
+        _pendingDir = (1, 0);
+        _score = 0;
+        PlaceFood();
+        _state = GameState.Playing;
+
+        _timer?.Dispose();
+        _timer = new System.Timers.Timer(TickMs) { AutoReset = true };
+        _timer.Elapsed += (_, _) => InvokeAsync(Tick);
+        _timer.Start();
+
+        StateHasChanged();
+        await _board.FocusAsync();
+    }
+
+    private void Tick()
+    {
+        if (_state != GameState.Playing) return;
+
+        _dir = _pendingDir;
+        var head = _snake[0];
+        var next = (head.x + _dir.x, head.y + _dir.y);
+
+        if (next.Item1 < 0 || next.Item2 < 0 || next.Item1 >= Size || next.Item2 >= Size)
+        {
+            Die();
+            return;
+        }
+
+        var eating = next == _food;
+
+        // Kollisjon med egen kropp — halens siste ledd flyttes bort samme tick
+        // (med mindre vi spiser), så det leddet teller ikke som treff.
+        for (var i = 0; i < _snake.Count; i++)
+        {
+            if (i == _snake.Count - 1 && !eating) break;
+            if (_snake[i] == next) { Die(); return; }
+        }
+
+        _snake.Insert(0, next);
+
+        if (eating)
+        {
+            _score++;
+            if (_snake.Count >= Size * Size) { Win(); return; }
+            PlaceFood();
+        }
+        else
+        {
+            _snake.RemoveAt(_snake.Count - 1);
+        }
+
+        StateHasChanged();
+    }
+
+    private void Die()
+    {
+        _best = Math.Max(_best, _score);
+        _state = GameState.Dead;
+        StopTimer();
+        StateHasChanged();
+    }
+
+    private void Win()
+    {
+        _best = Math.Max(_best, _score);
+        _state = GameState.Won;
+        StopTimer();
+        StateHasChanged();
+    }
+
+    private void PlaceFood()
+    {
+        var free = new List<(int, int)>();
+        for (var y = 0; y < Size; y++)
+            for (var x = 0; x < Size; x++)
+                if (!_snake.Contains((x, y))) free.Add((x, y));
+
+        if (free.Count == 0) return;
+        _food = free[_rng.Next(free.Count)];
+    }
+
+    private void OnKey(KeyboardEventArgs e)
+    {
+        if (_state != GameState.Playing)
+        {
+            if (e.Key is "Enter" or " " or "ArrowUp" or "ArrowDown" or "ArrowLeft" or "ArrowRight")
+                _ = Start();
+            return;
+        }
+
+        var d = e.Key switch
+        {
+            "ArrowUp" or "w" or "W" => (0, -1),
+            "ArrowDown" or "s" or "S" => (0, 1),
+            "ArrowLeft" or "a" or "A" => (-1, 0),
+            "ArrowRight" or "d" or "D" => (1, 0),
+            _ => (0, 0),
+        };
+
+        if (d == (0, 0)) return;
+        // ikke tillat 180°-vending
+        if (d == (-_dir.x, -_dir.y)) return;
+        _pendingDir = d;
+    }
+
+    private string CellClass(int x, int y, HashSet<(int, int)> body)
+    {
+        if (_snake.Count > 0 && _snake[0] == (x, y)) return "cell cell--head";
+        if (body.Contains((x, y))) return "cell cell--snake";
+        if (_state == GameState.Playing && _food == (x, y)) return "cell cell--food";
+        return "cell";
+    }
+
+    private void StopTimer()
+    {
+        if (_timer is not null)
+        {
+            _timer.Stop();
+            _timer.Dispose();
+            _timer = null;
+        }
+    }
+
+    public void Dispose() => StopTimer();
+}

@@ -1,16 +1,58 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager Nav
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<div class="window">
 
-        <article class="content px-4">
+    <nav class="tabbar" aria-label="Seksjoner">
+        <span class="tabbar__brand">laget-no</span>
+        <a class="@TabClass("")" href="">_hei</a>
+        <a class="@TabClass("tema")" href="tema">_tema</a>
+        <a class="@TabClass("om")" href="om">_om-siden</a>
+        <a class="@TabClass("kontakt") tab--right" href="kontakt">_kontakt</a>
+    </nav>
+
+    <main class="content">
+        <div class="content__inner">
             @Body
-        </article>
+        </div>
     </main>
+
+    <footer class="statusbar">
+        <span class="statusbar__label">finn meg på:</span>
+        <a class="statusbar__link" href="@GitHubUrl" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+            <span>ezpl</span>
+        </a>
+        <a class="statusbar__link" href="@DiscordUrl" target="_blank" rel="noopener" aria-label="Discord (.ezpl)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.55 3.02A13.2 13.2 0 0 0 10.3 2l-.16.32c1.02.25 1.5.6 2.02.98a6.7 6.7 0 0 0-2.5-.8 6.9 6.9 0 0 0-3.36.1c-.3.06-.6.14-.9.24-.3.1-.6.22-.9.36l.03.02c-.52.24-.83.42-.83.42s.5-.4 1.57-.72L5.13 2A13.2 13.2 0 0 0 2.44 3.02C.72 6.2.25 9.3.48 12.36a9.6 9.6 0 0 0 2.95 1.5l.6-.83a6.3 6.3 0 0 1-1.06-.5l.26-.2a6.85 6.85 0 0 0 5.83.66 6.3 6.3 0 0 0 1.16-.46l.26.2c-.33.2-.68.36-1.06.5l.6.83a9.6 9.6 0 0 0 2.95-1.5c.28-3.55-.48-6.62-2.28-9.34ZM5.65 10.5c-.57 0-1.04-.53-1.04-1.17 0-.65.46-1.17 1.04-1.17.58 0 1.05.53 1.04 1.17 0 .64-.46 1.17-1.04 1.17Zm4.7 0c-.57 0-1.04-.53-1.04-1.17 0-.65.46-1.17 1.04-1.17.58 0 1.05.53 1.04 1.17 0 .64-.46 1.17-1.04 1.17Z"/></svg>
+            <span>.ezpl</span>
+        </a>
+        <span class="statusbar__spacer"></span>
+        <span class="statusbar__end"><span class="dot">●</span> www.laget.no</span>
+    </footer>
+
 </div>
+
+@code {
+    // ── Sosiale lenker ────────────────────────────────────────────────
+    private const string GitHubUrl = "https://github.com/ezpl";
+    private const string DiscordUrl = "https://discord.com/users/705758226058313730";
+
+    private string TabClass(string path) =>
+        CurrentPath() == path ? "tab active" : "tab";
+
+    private string CurrentPath()
+    {
+        var rel = Nav.ToBaseRelativePath(Nav.Uri);
+        var q = rel.IndexOf('?');
+        if (q >= 0) rel = rel[..q];
+        return rel.Trim('/');
+    }
+
+    protected override void OnInitialized() => Nav.LocationChanged += OnLocationChanged;
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e) => StateHasChanged();
+
+    public void Dispose() => Nav.LocationChanged -= OnLocationChanged;
+}

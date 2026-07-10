@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Kun én deploy om gangen; ikke avbryt en pågående produksjonsdeploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish Blazor WASM
+        run: dotnet publish src/laget-web -c Release -o publish
+
+      - name: Assemble site (statiske tema + Pages-filer)
+        run: |
+          # Statiske tema-mapper (Bantu m.fl.) inn i web-roten
+          cp -r static/. publish/wwwroot/
+          # Hindre at GitHub Pages kjører Jekyll (ville droppet _framework/)
+          touch publish/wwwroot/.nojekyll
+          # Eget domene
+          echo 'www.laget.no' > publish/wwwroot/CNAME
+          # SPA-fallback: ukjente stier (f.eks. /tema ved direktelenke) -> appen
+          cp publish/wwwroot/index.html publish/wwwroot/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish/wwwroot
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

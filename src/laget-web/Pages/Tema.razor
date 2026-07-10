@@ -1,0 +1,40 @@
+@page "/tema"
+@inject NavigationManager Nav
+
+<PageTitle>laget.no — tema</PageTitle>
+
+<h1 class="page-title"><span class="prompt">&gt;</span>_tema</h1>
+<p class="page-lead">Alt som ligger på siden, samlet. Nye tema dukker opp her etter hvert.</p>
+
+<div class="tema-grid">
+    @foreach (var t in Temaer.Alle)
+    {
+        if (t.Publisert)
+        {
+            <a class="tema-card" href="@t.Href" @onclick="() => Aapne(t)" @onclick:preventDefault>
+                <div class="tema-card__head"><span class="ico">▸</span> @t.Tag</div>
+                <div class="tema-card__title">@t.Tittel</div>
+                <p class="tema-card__desc">@t.Beskrivelse</p>
+                <div class="tema-card__go">åpne →</div>
+            </a>
+        }
+        else
+        {
+            <div class="tema-card tema-card--coming">
+                <div class="tema-card__head"><span class="ico">▸</span> @t.Tag</div>
+                <div class="tema-card__title">@t.Tittel</div>
+                <p class="tema-card__desc">@t.Beskrivelse</p>
+                <div class="tema-card__go comment">kommer …</div>
+            </div>
+        }
+    }
+    <div class="tema-card tema-card--coming">
+        <div class="tema-card__head"><span class="ico">▸</span> ?</div>
+        <div class="tema-card__title comment">Flere tema kommer …</div>
+        <p class="tema-card__desc">Ideer er under arbeid.</p>
+    </div>
+</div>
+
+@code {
+    private void Aapne(Models.Tema t) => Nav.NavigateTo(t.Href, forceLoad: t.Ekstern);
+}
