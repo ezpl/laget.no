@@ -1,38 +1,55 @@
 @page "/tema"
+@inherits LocalizedComponentBase
 @inject NavigationManager Nav
 
-<PageTitle>laget.no — tema</PageTitle>
+<PageTitle>@Lang.T("laget.no — tema", "laget.no — topics")</PageTitle>
 
-<h1 class="page-title"><span class="prompt">&gt;</span>_tema</h1>
-<p class="page-lead">Alt som ligger på siden, samlet. Nye tema dukker opp her etter hvert.</p>
+<h1 class="page-title"><span class="prompt">&gt;</span>@Lang.T("_tema", "_topics")</h1>
+<p class="page-lead">@Lang.T("Alt som ligger på siden, samlet. Nye ting dukker opp her etter hvert.",
+                      "Everything on the site, in one place. New things appear here over time.")</p>
 
+<h2 class="cat"><span class="comment">//</span> @Lang.T("tema", "topics")</h2>
 <div class="tema-grid">
     @foreach (var t in Temaer.Alle)
     {
         if (t.Publisert)
         {
             <a class="tema-card" href="@t.Href" @onclick="() => Aapne(t)" @onclick:preventDefault>
-                <div class="tema-card__head"><span class="ico">▸</span> @t.Tag</div>
-                <div class="tema-card__title">@t.Tittel</div>
-                <p class="tema-card__desc">@t.Beskrivelse</p>
-                <div class="tema-card__go">åpne →</div>
+                <div class="tema-card__head"><span class="ico">▸</span> @Lang.L(t.Tag)</div>
+                <div class="tema-card__title">@Lang.L(t.Tittel)</div>
+                <p class="tema-card__desc">@Lang.L(t.Beskrivelse)</p>
+                <div class="tema-card__go">@Lang.T("åpne", "open") →</div>
             </a>
         }
         else
         {
             <div class="tema-card tema-card--coming">
-                <div class="tema-card__head"><span class="ico">▸</span> @t.Tag</div>
-                <div class="tema-card__title">@t.Tittel</div>
-                <p class="tema-card__desc">@t.Beskrivelse</p>
-                <div class="tema-card__go comment">kommer …</div>
+                <div class="tema-card__head"><span class="ico">▸</span> @Lang.L(t.Tag)</div>
+                <div class="tema-card__title">@Lang.L(t.Tittel)</div>
+                <p class="tema-card__desc">@Lang.L(t.Beskrivelse)</p>
+                <div class="tema-card__go comment">@Lang.T("kommer …", "coming …")</div>
             </div>
         }
     }
     <div class="tema-card tema-card--coming">
         <div class="tema-card__head"><span class="ico">▸</span> ?</div>
-        <div class="tema-card__title comment">Flere tema kommer …</div>
-        <p class="tema-card__desc">Ideer er under arbeid.</p>
+        <div class="tema-card__title comment">@Lang.T("Flere tema kommer …", "More topics coming …")</div>
+        <p class="tema-card__desc">@Lang.T("Ideer er under arbeid.", "Ideas in the works.")</p>
     </div>
+</div>
+
+<h2 class="cat"><span class="comment">//</span> @Lang.T("applikasjoner", "applications")
+    <a class="cat__sub" href="@Apper.HubUrl" target="_blank" rel="noopener">— 0z0.xyz ↗</a></h2>
+<div class="tema-grid">
+    @foreach (var a in Apper.Alle)
+    {
+        <a class="tema-card" href="@a.Href" target="_blank" rel="noopener">
+            <div class="tema-card__head"><span class="ico">▸</span> 0z0</div>
+            <div class="tema-card__title">@a.Navn</div>
+            <p class="tema-card__desc">@Lang.L(a.Om)</p>
+            <div class="tema-card__go">@Lang.T("åpne", "open") ↗</div>
+        </a>
+    }
 </div>
 
 @code {

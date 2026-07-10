@@ -14,10 +14,12 @@ src/laget-web/            Blazor WASM-app (startsiden = "skallet")
   Components/Snake.razor  snake-spillet (ren C#)
   Components/Konsoll.razor skjult terminal (easter egg) — trykk ` (backtick)
   KonsollBus.cs           bro fra JS-hurtigtast til terminal-komponenten
-  Layout/MainLayout.razor faner (topp) + statuslinje (bunn)
-  Models/Tema.cs          registeret over temaene — én kilde
+  Services/LangService.cs språk (nb/en): valg, persistens, nettleser-standard
+  LocalizedComponentBase.cs  basisklasse: injiserer Lang + re-render ved bytte
+  Layout/MainLayout.razor faner (topp) + språkvelger + statuslinje (bunn)
+  Models/Tema.cs          register: temaer + 0z0-apper (lokalisert) — én kilde
   wwwroot/                index.html, css/app.css (Grafitt-tema)
-  wwwroot/js/laget.js     konsoll-hilsen, backtick-hurtigtast, matrix-effekt
+  wwwroot/js/laget.js     språkhjelpere, konsoll-hilsen, backtick, matrix
 static/
   bantu-expansion/        tema: Bantu & kikuyu (selvstendig statisk infografikk)
 .github/workflows/deploy.yml   bygger + deployer til GitHub Pages ved push til main
@@ -53,6 +55,16 @@ cp -r static/. publish/wwwroot/
 **Nytt C#-verktøy** (interaktiv side):
 1. Lag `src/laget-web/Pages/<Navn>.razor` med `@page "/<rute>"`.
 2. Legg til en linje i `Models/Tema.cs` med `Ekstern: false` og `Href: "<rute>"`.
+
+## Språk (i18n)
+
+Siden er tospråklig (norsk/engelsk) uten `.resx`/kulturer — appen beholder
+`InvariantGlobalization` for kort lastetid. `LangService` holder valgt språk;
+komponenter arver `LocalizedComponentBase` og henter tekst via `Lang.T("nb",
+"en")` (inline) eller `Lang.L(ls)` (lokalisert data). Nytt tekstpar = to
+argumenter på stedet, ingen egen ressursfil. Valget lagres i `localStorage`
+(`laget-lang`); standard utledes fra nettleserspråket. Bytt med `nb`/`en` i
+fane-linja.
 
 ## Deploy
 

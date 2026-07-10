@@ -1,6 +1,6 @@
-@implements IDisposable
+@inherits LocalizedComponentBase
 
-<aside class="game" aria-label="Snake-spill">
+<aside class="game" aria-label="Snake">
     <div class="game__bar">
         <span class="game__file"><span class="game__dot"></span>snake.cs</span>
         <span class="game__score">score: @_score</span>
@@ -9,7 +9,7 @@
     <div class="game__stage">
         <div class="snake-board" tabindex="0" @ref="_board"
              @onkeydown="OnKey" @onkeydown:preventDefault="Capture"
-             role="application" aria-label="Snake-brett — bruk piltastene">
+             role="application" aria-label="@Lang.T("Snake-brett — bruk piltastene", "Snake board — use the arrow keys")">
             @{ var body = new HashSet<(int, int)>(_snake); }
             @for (var y = 0; y < Size; y++)
             {
@@ -26,18 +26,18 @@
                 @switch (_state)
                 {
                     case GameState.Idle:
-                        <p class="game__msg comment">// et lite avbrekk</p>
-                        <button class="game__btn" @onclick="Start">start-spillet</button>
+                        <p class="game__msg comment">@Lang.T("// et lite avbrekk", "// a little break")</p>
+                        <button class="game__btn" @onclick="Start">@Lang.T("start-spillet", "start-game")</button>
                         break;
                     case GameState.Dead:
                         <p class="game__msg accent">GAME OVER</p>
                         <p class="game__sub comment">score: @_score @(_best > 0 ? $"· best: {_best}" : "")</p>
-                        <button class="game__btn" @onclick="Start">prøv-igjen</button>
+                        <button class="game__btn" @onclick="Start">@Lang.T("prøv-igjen", "try-again")</button>
                         break;
                     case GameState.Won:
-                        <p class="game__msg green">BRA JOBBA!</p>
-                        <p class="game__sub comment">du fylte hele brettet</p>
-                        <button class="game__btn" @onclick="Start">spill-igjen</button>
+                        <p class="game__msg green">@Lang.T("BRA JOBBA!", "WELL DONE!")</p>
+                        <p class="game__sub comment">@Lang.T("du fylte hele brettet", "you filled the whole board")</p>
+                        <button class="game__btn" @onclick="Start">@Lang.T("spill-igjen", "play-again")</button>
                         break;
                 }
             </div>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="game__foot comment">
-        <span>// piltaster styrer</span>
+        <span>@Lang.T("// piltaster styrer", "// arrow keys steer")</span>
         <span class="game__keys" aria-hidden="true">
             <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
         </span>
@@ -203,5 +203,9 @@
         }
     }
 
-    public void Dispose() => StopTimer();
+    public override void Dispose()
+    {
+        StopTimer();
+        base.Dispose();
+    }
 }

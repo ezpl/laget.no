@@ -122,6 +122,28 @@ h1:focus, h1:focus-visible { outline: none; }
     border-right: none;
     border-left: 1px solid var(--border);
 }
+.tab--edge { border-left: 1px solid var(--border); }
+
+/* språkvelger (nb / en) — skyves mot høyre i fane-linja */
+.tabbar__lang {
+    margin-left: auto;
+    display: flex;
+    align-items: stretch;
+    border-left: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.lang {
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    padding: 0 11px;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+.lang:hover { color: var(--text); }
+.lang--on { color: var(--orange); }
 
 /* ---------- innholdsflate ---------- */
 .content {
@@ -304,11 +326,30 @@ h1.hero .dot { color: var(--orange); }
 /* ============================================================
    Tema-utforsker (_tema)
    ============================================================ */
+.cat {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 34px 0 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.cat:first-of-type { margin-top: 8px; }
+.cat__sub {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--muted);
+    transition: color 0.15s ease;
+}
+.cat__sub:hover { color: var(--orange); }
+
 .tema-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 18px;
 }
+.tema-grid + .cat { margin-top: 40px; }
 .tema-card {
     display: block;
     background: var(--panel);

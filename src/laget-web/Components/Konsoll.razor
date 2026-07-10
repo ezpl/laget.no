@@ -1,6 +1,7 @@
 @implements IDisposable
 @inject NavigationManager Nav
 @inject IJSRuntime JS
+@inject LangService Lang
 
 @if (_open)
 {
@@ -8,8 +9,8 @@
         <div class="konsoll__win" @onclick:stopPropagation>
             <div class="konsoll__bar">
                 <span class="konsoll__dot"></span>
-                <span class="konsoll__title">gjest@@laget.no — ~</span>
-                <button class="konsoll__x" @onclick="Close" aria-label="Lukk">✕</button>
+                <span class="konsoll__title">@Prompt — ~</span>
+                <button class="konsoll__x" @onclick="Close" aria-label="@Lang.T("Lukk", "Close")">✕</button>
             </div>
 
             <div class="konsoll__out" @ref="_outEl">
@@ -20,10 +21,10 @@
             </div>
 
             <div class="konsoll__in">
-                <span class="konsoll__prompt">gjest@@laget.no:~$</span>
+                <span class="konsoll__prompt">@Prompt:~$</span>
                 <input @ref="_inputEl" @bind="_input" @bind:event="oninput"
                        @onkeydown="OnKey" class="konsoll__field"
-                       autocomplete="off" autocapitalize="off"
+                       autocomplete="off" autocapitalize="off" autocorrect="off"
                        spellcheck="false" aria-label="Terminal" />
             </div>
         </div>
@@ -42,11 +43,19 @@
     private ElementReference _outEl;
     private bool _focusQueued;
 
+    private string Prompt => Lang.T("gjest@laget.no", "guest@laget.no");
+
     protected override void OnInitialized()
     {
         KonsollBus.ToggleRequested += Toggle;
-        Print("laget.no terminal — skriv <span class=\"a\">help</span> for kommandoer. Lukk med <span class=\"a\">Esc</span>.", "muted");
+        Lang.OnChange += OnLangChanged;
+        Print(Lang.T(
+            "laget.no terminal — skriv <span class=\"a\">help</span> for kommandoer. Lukk med <span class=\"a\">Esc</span>.",
+            "laget.no terminal — type <span class=\"a\">help</span> for commands. Close with <span class=\"a\">Esc</span>."),
+            "muted");
     }
+
+    private void OnLangChanged() => InvokeAsync(StateHasChanged);
 
     private void Toggle()
     {
@@ -91,7 +100,7 @@
     private async Task Run(string raw)
     {
         var cmd = raw.Trim();
-        Print($"<span class=\"p\">gjest@laget.no:~$</span> {Escape(cmd)}");
+        Print($"<span class=\"p\">{Prompt}:~$</span> {Escape(cmd)}");
         if (cmd.Length == 0) return;
 
         _history.Add(cmd);
@@ -104,28 +113,31 @@
         switch (name)
         {
             case "help":
-                Print("tilgjengelige kommandoer:", "muted");
-                Print("  <span class=\"a\">help</span>       denne lista");
-                Print("  <span class=\"a\">ls</span>         list temaene");
-                Print("  <span class=\"a\">apper</span>      nyttige applikasjoner");
-                Print("  <span class=\"a\">open</span> &lt;navn&gt; åpne et tema (f.eks. <span class=\"a\">open bantu-kikuyu</span>)");
-                Print("  <span class=\"a\">whoami</span>     hvem er du");
-                Print("  <span class=\"a\">uname</span>      hva siden kjører på");
-                Print("  <span class=\"a\">date</span>       klokka nå");
-                Print("  <span class=\"a\">echo</span> &lt;tekst&gt; skriv tilbake");
+            case "hjelp":
+                Print(Lang.T("tilgjengelige kommandoer:", "available commands:"), "muted");
+                Print("  <span class=\"a\">help</span>       " + Lang.T("denne lista", "this list"));
+                Print("  <span class=\"a\">ls</span>         " + Lang.T("list temaene", "list the topics"));
+                Print("  <span class=\"a\">apper</span>      " + Lang.T("nyttige applikasjoner", "useful applications"));
+                Print("  <span class=\"a\">open</span> &lt;navn&gt; " + Lang.T("åpne et tema", "open a topic")
+                    + " (<span class=\"a\">open bantu-kikuyu</span>)");
+                Print("  <span class=\"a\">whoami</span>     " + Lang.T("hvem er du", "who you are"));
+                Print("  <span class=\"a\">uname</span>      " + Lang.T("hva siden kjører på", "what the site runs on"));
+                Print("  <span class=\"a\">date</span>       " + Lang.T("klokka nå", "the time now"));
+                Print("  <span class=\"a\">echo</span> &lt;tekst&gt; " + Lang.T("skriv tilbake", "echo back"));
                 Print("  <span class=\"a\">snake</span>      🐍");
-                Print("  <span class=\"a\">matrix</span>     følg den hvite kaninen");
-                Print("  <span class=\"a\">github</span> · <span class=\"a\">discord</span>   finn meg");
-                Print("  <span class=\"a\">clear</span>      tøm skjermen");
-                Print("  <span class=\"a\">exit</span>       lukk terminalen");
+                Print("  <span class=\"a\">matrix</span>     " + Lang.T("følg den hvite kaninen", "follow the white rabbit"));
+                Print("  <span class=\"a\">github</span> · <span class=\"a\">discord</span>   " + Lang.T("finn meg", "find me"));
+                Print("  <span class=\"a\">clear</span>      " + Lang.T("tøm skjermen", "clear the screen"));
+                Print("  <span class=\"a\">exit</span>       " + Lang.T("lukk terminalen", "close the terminal"));
                 break;
 
             case "ls":
             case "tema":
+            case "topics":
                 foreach (var t in Temaer.Alle)
                 {
-                    var status = t.Publisert ? "" : "  <span class=\"muted\">(kommer)</span>";
-                    Print($"  <span class=\"g\">{Escape(t.Slug)}</span>  <span class=\"muted\">{Escape(t.Tag)}</span>{status}");
+                    var status = t.Publisert ? "" : "  <span class=\"muted\">(" + Lang.T("kommer", "coming") + ")</span>";
+                    Print($"  <span class=\"g\">{Escape(t.Slug)}</span>  <span class=\"muted\">{Escape(Lang.L(t.Tag))}</span>{status}");
                 }
                 break;
 
@@ -133,7 +145,7 @@
             case "apps":
                 foreach (var a in Apper.Alle)
                 {
-                    Print($"  <a class=\"a\" href=\"{a.Href}\" target=\"_blank\" rel=\"noopener\">{Escape(a.Navn)}</a>  <span class=\"muted\">{Escape(a.Om)}</span>");
+                    Print($"  <a class=\"a\" href=\"{a.Href}\" target=\"_blank\" rel=\"noopener\">{Escape(a.Navn)}</a>  <span class=\"muted\">{Escape(Lang.L(a.Om))}</span>");
                 }
                 break;
 
@@ -143,18 +155,20 @@
                     t.Publisert && string.Equals(t.Slug, arg, StringComparison.OrdinalIgnoreCase));
                 if (match is null)
                 {
-                    Print($"fant ikke tema: <span class=\"a\">{Escape(arg)}</span>. prøv <span class=\"a\">ls</span>.", "err");
+                    Print(Lang.T($"fant ikke tema: <span class=\"a\">{Escape(arg)}</span>. prøv <span class=\"a\">ls</span>.",
+                                 $"no such topic: <span class=\"a\">{Escape(arg)}</span>. try <span class=\"a\">ls</span>."), "err");
                 }
                 else
                 {
-                    Print($"åpner <span class=\"g\">{Escape(match.Slug)}</span> …");
+                    Print(Lang.T($"åpner <span class=\"g\">{Escape(match.Slug)}</span> …",
+                                 $"opening <span class=\"g\">{Escape(match.Slug)}</span> …"));
                     Close();
                     Nav.NavigateTo(match.Href, forceLoad: match.Ekstern);
                 }
                 break;
 
             case "whoami":
-                Print("gjest — velkommen innom 👋");
+                Print(Lang.T("gjest — velkommen innom 👋", "guest — glad you stopped by 👋"));
                 break;
 
             case "uname":
@@ -163,7 +177,7 @@
 
             case "date":
             case "klokke":
-                Print(NorskDato(DateTime.Now));
+                Print(DateStr(DateTime.Now));
                 break;
 
             case "echo":
@@ -171,7 +185,8 @@
                 break;
 
             case "snake":
-                Print("🐍 slangen bor på forsiden — piltaster styrer. Lykke til!");
+                Print(Lang.T("🐍 slangen bor på forsiden — piltaster styrer. Lykke til!",
+                             "🐍 the snake lives on the home page — arrow keys steer. Good luck!"));
                 break;
 
             case "matrix":
@@ -188,7 +203,8 @@
                 break;
 
             case "sudo":
-                Print("gjest er ikke i sudoers-fila. Hendelsen er rapportert.", "err");
+                Print(Lang.T("gjest er ikke i sudoers-fila. Hendelsen er rapportert.",
+                             "guest is not in the sudoers file. This incident will be reported."), "err");
                 break;
 
             case "clear":
@@ -202,20 +218,26 @@
                 break;
 
             default:
-                Print($"kommando ikke funnet: <span class=\"a\">{Escape(name)}</span>. prøv <span class=\"a\">help</span>.", "err");
+                Print(Lang.T($"kommando ikke funnet: <span class=\"a\">{Escape(name)}</span>. prøv <span class=\"a\">help</span>.",
+                             $"command not found: <span class=\"a\">{Escape(name)}</span>. try <span class=\"a\">help</span>."), "err");
                 break;
         }
     }
 
     private void Print(string html, string css = "") => _lines.Add(new Line(html, css));
 
-    // Norsk dato uten ICU (siden appen kjører med InvariantGlobalization).
-    private static string NorskDato(DateTime d)
+    // Dato uten ICU (appen kjører med InvariantGlobalization).
+    private string DateStr(DateTime d)
     {
-        string[] dager = { "søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag" };
-        string[] mnd = { "januar", "februar", "mars", "april", "mai", "juni",
-                         "juli", "august", "september", "oktober", "november", "desember" };
-        return $"{dager[(int)d.DayOfWeek]} {d.Day}. {mnd[d.Month - 1]} {d.Year}, {d:HH:mm:ss}";
+        string[] dagerNb = { "søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag" };
+        string[] mndNb = { "januar", "februar", "mars", "april", "mai", "juni",
+                           "juli", "august", "september", "oktober", "november", "desember" };
+        string[] daysEn = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+        string[] monthsEn = { "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December" };
+        return Lang.IsEn
+            ? $"{daysEn[(int)d.DayOfWeek]} {d.Day} {monthsEn[d.Month - 1]} {d.Year}, {d:HH:mm:ss}"
+            : $"{dagerNb[(int)d.DayOfWeek]} {d.Day}. {mndNb[d.Month - 1]} {d.Year}, {d:HH:mm:ss}";
     }
 
     private static string Escape(string s) => s
@@ -234,5 +256,9 @@
         }
     }
 
-    public void Dispose() => KonsollBus.ToggleRequested -= Toggle;
+    public void Dispose()
+    {
+        KonsollBus.ToggleRequested -= Toggle;
+        Lang.OnChange -= OnLangChanged;
+    }
 }

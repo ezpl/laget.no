@@ -1,12 +1,17 @@
 @page "/not-found"
 @layout MainLayout
+@inherits LocalizedComponentBase
 
 <PageTitle>laget.no — 404</PageTitle>
 
 <h1 class="page-title"><span class="prompt">&gt;</span>_404</h1>
-<p class="page-lead">Fant ikke den siden.</p>
+<p class="page-lead">@Lang.T("Fant ikke den siden.", "Page not found.")</p>
 
 <div class="panel">
-    <p class="comment">// throw new NotFoundException("den siden finnes ikke");</p>
-    <p>Prøv <a class="inline" href="">forsiden</a> eller <a class="inline" href="tema">_tema</a>.</p>
+    <p class="comment">@Lang.T("// throw new NotFoundException(\"den siden finnes ikke\");",
+                        "// throw new NotFoundException(\"that page does not exist\");")</p>
+    <p>
+        @Lang.T("Prøv ", "Try ")<a class="inline" href="">@Lang.T("forsiden", "the home page")</a>
+        @Lang.T(" eller ", " or ")<a class="inline" href="tema">@Lang.T("_tema", "_topics")</a>.
+    </p>
 </div>

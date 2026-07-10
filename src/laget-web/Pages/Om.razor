@@ -1,22 +1,25 @@
 @page "/om"
+@inherits LocalizedComponentBase
 
-<PageTitle>laget.no — om siden</PageTitle>
+<PageTitle>@Lang.T("laget.no — om siden", "laget.no — about")</PageTitle>
 
-<h1 class="page-title"><span class="prompt">&gt;</span>_om-siden</h1>
-<p class="page-lead">Hva dette er.</p>
+<h1 class="page-title"><span class="prompt">&gt;</span>@Lang.T("_om-siden", "_about")</h1>
+<p class="page-lead">@Lang.T("Hva dette er.", "What this is.")</p>
 
 <div class="panel">
     <p>
-        <span class="green">laget.no</span> er et verksted for ting som er verdt
-        å forstå ordentlig — samlet på ett sted, ett tema om gangen.
+        <span class="green">laget.no</span>
+        @Lang.T("er et verksted for ting som er verdt å forstå ordentlig — samlet på ett sted, ett tema om gangen.",
+                "is a workshop for things worth understanding properly — gathered in one place, one topic at a time.")
     </p>
     <p>
-        Få tema, men gravd dypt, satt sammen med omhu og presentert stilrent.
-        Nerdete av natur, detaljorientert av vane, og helst litt utfordrende.
-        Start med <a class="inline" href="tema">Bantu og kikuyu</a>.
+        @Lang.T("Få tema, men gravd helt til bunns: kildene lest, detaljene etterprøvd og satt sammen så det henger på greip og er en fryd å lese. Kvalitet framfor mengde. Start med ",
+                "Few topics, but dug all the way down: sources read, details checked, and assembled so it holds together and is a pleasure to read. Quality over quantity. Start with ")<a class="inline" href="tema">@Lang.T("Bantu og kikuyu", "Bantu and Kikuyu")</a>.
     </p>
     <p class="comment">
-        // bygget i C# (Blazor WebAssembly). Hvert tema er sin egen side, så
-        // innhold og teknikk kan vokse i sitt eget tempo.
+        @Lang.T("// bygget i C# (Blazor WebAssembly). Hvert tema er sin egen side, så",
+                "// built in C# (Blazor WebAssembly). Each topic is its own page, so")<br />
+        @Lang.T("// innhold og teknikk kan vokse i sitt eget tempo.",
+                "// content and tech can grow at their own pace.")
     </p>
 </div>

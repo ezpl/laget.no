@@ -1,23 +1,43 @@
 // Små, rammeverk-uavhengige finesser som Blazor ikke gjør selv:
-//  1) en hilsen i nettleserkonsollen til nysgjerrige som åpner DevTools
-//  2) en global hurtigtast (`) som åpner den skjulte terminalen
-//  3) en «matrix»-regn-effekt som terminalkommandoen `matrix` kaller
+//  1) språkhjelpere (localStorage + nettleserspråk) som .NET leser ved oppstart
+//  2) en hilsen i nettleserkonsollen til nysgjerrige som åpner DevTools
+//  3) en global hurtigtast (backtick / den fysiske Backquote-tasten) for terminalen
+//  4) en «matrix»-regn-effekt som terminalkommandoen `matrix` kaller
 (function () {
-    // 1) Konsoll-hilsen ------------------------------------------------------
+    // 1) Språk ---------------------------------------------------------------
+    window.lagetLang = {
+        get: function () { try { return localStorage.getItem("laget-lang"); } catch (e) { return null; } },
+        set: function (v) {
+            try { localStorage.setItem("laget-lang", v); } catch (e) { /* privat modus */ }
+            document.documentElement.lang = v;
+        },
+        browser: function () { return navigator.language || ""; }
+    };
+    function currentLang() {
+        var saved = window.lagetLang.get();
+        if (saved === "nb" || saved === "en") return saved;
+        var b = (navigator.language || "").toLowerCase();
+        return (b.indexOf("nb") === 0 || b.indexOf("no") === 0 || b.indexOf("nn") === 0) ? "nb" : "en";
+    }
+
+    // 2) Konsoll-hilsen ------------------------------------------------------
     var big = "font:600 40px 'Fira Code',monospace;";
     console.log(
         "%claget%c.%cno",
         big + "color:#e5e9f0", big + "color:#fea55f", big + "color:#e5e9f0");
-    console.log(
-        "%cpsst — trykk  `  (backtick) hvor som helst for en overraskelse 🤓",
-        "color:#43d9ad;font:14px 'Fira Code',monospace");
+    var hint = currentLang() === "en"
+        ? "psst — press  `  (backtick) anywhere for a surprise 🤓"
+        : "psst — trykk  `  (backtick) hvor som helst for en overraskelse 🤓";
+    console.log("%c" + hint, "color:#43d9ad;font:14px 'Fira Code',monospace");
 
-    // 2) Global hurtigtast for terminalen -----------------------------------
+    // 3) Global hurtigtast for terminalen -----------------------------------
+    // e.code === "Backquote" er den FYSISKE tasten (venstre for 1 / over Tab)
+    // uavhengig av tastaturlayout — så den funker også på norsk tastatur der
+    // selve backtick-tegnet ligger bak AltGr / er en død tast.
     document.addEventListener("keydown", function (e) {
         var t = e.target;
         var typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
-        // Backtick åpner/lukker — men ikke mens man skriver i et tekstfelt.
-        if (e.key === "`" && !typing) {
+        if ((e.key === "`" || e.code === "Backquote") && !typing) {
             e.preventDefault();
             if (window.DotNet) {
                 DotNet.invokeMethodAsync("LagetWeb", "Toggle");
@@ -25,7 +45,7 @@
         }
     });
 
-    // 3) Matrix-regn (kort, selvopprydende overlay) -------------------------
+    // 4) Matrix-regn (kort, selvopprydende overlay) -------------------------
     window.lagetMatrix = function (seconds) {
         if (document.getElementById("laget-matrix")) return;
         var canvas = document.createElement("canvas");
