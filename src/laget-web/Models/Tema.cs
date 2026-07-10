@@ -42,6 +42,17 @@ public static class Temaer
               + "Map, timeline, language, belief and the Kikuyu people, as an infographic."),
             Href: "bantu-expansion/",
             Ekstern: true),
+        new Tema(
+            Slug: "wirute-gikuyu",
+            Tittel: new Ls("Wĩrute Gĩkũyũ", "Wĩrute Gĩkũyũ"),
+            Tag: new Ls("språk", "language"),
+            Beskrivelse: new Ls(
+                "Lær kikuyu: kort med spaced repetition, quiz, grammatikk, "
+              + "setninger og søkbar ordbok. På norsk, engelsk, tysk og fransk.",
+                "Learn Kikuyu: spaced-repetition flashcards, quizzes, grammar, "
+              + "sentences and a searchable dictionary. In Norwegian, English, German and French."),
+            Href: "https://ezpl.github.io/wirute-gikuyu/",
+            Ekstern: true),
     ];
 }
 
