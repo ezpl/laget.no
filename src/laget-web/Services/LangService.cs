@@ -35,10 +35,10 @@ public class LangService
         try
         {
             var saved = await _js.InvokeAsync<string?>("lagetLang.get");
-            if (saved is "nb" or "en") { Set(saved); return; }
+            if (saved is "nb" or "en") { Cur = saved; return; }
 
             var browser = (await _js.InvokeAsync<string?>("lagetLang.browser") ?? "").ToLowerInvariant();
-            Set(browser.StartsWith("nb") || browser.StartsWith("no") || browser.StartsWith("nn") ? "nb" : "en");
+            Cur = browser.StartsWith("nb") || browser.StartsWith("no") || browser.StartsWith("nn") ? "nb" : "en";
         }
         catch
         {
@@ -50,10 +50,8 @@ public class LangService
     public async Task SetAsync(string lang)
     {
         if (lang is not ("nb" or "en") || lang == Cur) return;
-        Set(lang);
+        Cur = lang;
         await _js.InvokeVoidAsync("lagetLang.set", lang);
         OnChange?.Invoke();
     }
-
-    private void Set(string lang) => Cur = lang;
 }

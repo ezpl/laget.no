@@ -117,11 +117,6 @@ h1:focus, h1:focus-visible { outline: none; }
     border-bottom-color: var(--orange);
     background: var(--bg);
 }
-.tab--right {
-    margin-left: auto;
-    border-right: none;
-    border-left: 1px solid var(--border);
-}
 .tab--edge { border-left: 1px solid var(--border); }
 
 /* språkvelger (nb / en) — skyves mot høyre i fane-linja */
