@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E4D8BF"/><path d="M30 78 L50 34 L70 78 Z" fill="none" stroke="#B4502A" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 40 C 64 46 66 60 60 70" fill="none" stroke="#6F7A3A" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="5 5"/><circle cx="70" cy="30" r="7" fill="#C98A2E"/></svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  a { color: #B4502A; }
+  a:hover { color: #8a3c20; }
+  @keyframes drawRoute { from { stroke-dashoffset: var(--len, 1400); } to { stroke-dashoffset: 0; } }
+  @keyframes homePulse { 0% { r: 12; opacity: .55; } 100% { r: 40; opacity: 0; } }
+  @keyframes ill-spin { to { transform: rotate(360deg); } }
+  @keyframes ill-sway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+  @keyframes ill-pulse { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.14); opacity: 1; } }
+  @keyframes ill-rise { 0% { transform: translateY(5px); opacity: 0; } 35% { opacity: 1; } 100% { transform: translateY(-7px); opacity: 0; } }
+  @keyframes ill-drop { 0% { transform: translateY(-4px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
+  @keyframes ill-tap { 0%,100% { transform: rotate(2deg); } 50% { transform: rotate(-15deg); } }
+  @keyframes ill-dash { to { stroke-dashoffset: -24; } }
+  @keyframes ill-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+  @keyframes ill-twinkle { 0%,100% { opacity: .2; } 50% { opacity: 1; } }
+  @keyframes ill-grow { 0% { transform: scaleY(.25); } 60% { transform: scaleY(1.06); } 100% { transform: scaleY(1); } }
+  .ill { display:block; }
+  .ill [data-a] { transform-box: fill-box; transform-origin: center; }
+  .fact-chip { position: relative; }
+  .fact-pop { opacity: 0; visibility: hidden; transform: translateY(4px); transition: opacity .15s ease, transform .15s ease; }
+  .fact-chip:hover .fact-pop { opacity: 1; visibility: visible; transform: translateY(0); }
+  .scroll-deck { height:100vh; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; scroll-behavior:smooth; }
+  .page-wrap { height:100vh; width:100vw; overflow:hidden; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; }
+  .page-wrap > [data-screen-label] { flex:0 0 auto; transform:scale(var(--deck-scale,1)); }
+  .deck-dots { position:fixed; right:20px; top:50%; transform:translateY(-50%); z-index:100; display:flex; flex-direction:column; gap:12px; }
+  .deck-dots button { width:11px; height:11px; padding:0; border-radius:50%; border:1.5px solid #8a5a34; background:transparent; cursor:pointer; transition:background .2s; }
+  .deck-dots button.active { background:#B4502A; border-color:#B4502A; }
+</style>
+<script>
+(function(){
+  function fit(){ var s=Math.min(window.innerWidth/1920, window.innerHeight/1080); document.documentElement.style.setProperty('--deck-scale', s); }
+  fit(); window.addEventListener('resize', fit); window.addEventListener('load', fit);
+  function initDots(){
+    var deck=document.querySelector('.scroll-deck'); if(!deck){ return setTimeout(initDots,120); }
+    if(document.querySelector('.deck-dots')) return;
+    var pages=[].slice.call(deck.querySelectorAll('.page-wrap'));
+    var nav=document.createElement('div'); nav.className='deck-dots';
+    pages.forEach(function(p,i){ var b=document.createElement('button'); b.title='Page '+(i+1); b.onclick=function(){ p.scrollIntoView({behavior:'smooth'}); }; nav.appendChild(b); });
+    document.body.appendChild(nav);
+    var dots=nav.querySelectorAll('button');
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var idx=pages.indexOf(e.target); dots.forEach(function(d,j){ d.classList.toggle('active', j===idx); }); } }); },{root:deck,threshold:0.5});
+    pages.forEach(function(p){ io.observe(p); });
+  }
+  if(document.readyState!=='loading') initDots(); else document.addEventListener('DOMContentLoaded', initDots);
+})();
+</script>
+</helmet>
+<div class="scroll-deck">
+<div class="page-wrap">
+<div data-screen-label="Bantu Expansion" style="position:relative; width:1920px; height:1080px; background:#E9DEC7; background-image: radial-gradient(circle at 22% 18%, #EFE6D2 0%, #E4D8BF 55%, #DED0B3 100%); color:#3B2E22; font-family:'Spectral', Georgia, serif; overflow:hidden; display:grid; grid-template-columns:540px 1fr 336px; grid-template-rows:auto minmax(0,1fr) auto; column-gap:44px; row-gap:34px; padding:60px 66px 54px;">
+
+  <!-- faint frame -->
+  <div style="position:absolute; inset:26px; border:1px solid rgba(59,46,34,.16); pointer-events:none;"></div>
+  <div style="position:absolute; top:34px; right:38px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.28em; color:rgba(59,46,34,.45);">AFRICA · 3000 BCE — 500 CE</div>
+
+  <!-- EYEBROW ROW -->
+  <div style="grid-column:1 / -1; display:flex; align-items:center; gap:16px; padding-top:8px;">
+    <span style="width:44px; height:2px; background:#B4502A;"></span>
+    <span style="font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:.42em; text-transform:uppercase; color:#8a5a34;">Human Migration · Sub-Saharan Africa</span>
+  </div>
+
+  <!-- INFO COLUMN -->
+  <div style="grid-column:1; grid-row:2; min-height:0; display:flex; flex-direction:column; padding-top:6px;">
+    <h1 style="margin:0; font-size:74px; line-height:.94; font-weight:600; letter-spacing:-.01em; color:#2E241B;">The Bantu<br>Expansion</h1>
+    <p style="margin:20px 0 0; font-size:23px; line-height:1.38; font-weight:400; font-style:italic; color:#6E5D48; max-width:520px;">The Bantu are not one tribe but a huge family of peoples — today some 350 million, from Cameroon to South Africa. They all trace back to one small homeland.</p>
+    <p style="margin:14px 0 0; font-size:18.5px; line-height:1.5; color:#463829; max-width:530px;">It began around <strong style="font-weight:600;">3000&nbsp;BCE</strong>, when farming villages on the Nigeria–Cameroon border started to move. Over the next 3,000 years they spread south and east — one path through the Congo rainforest, another toward the Great Lakes. They carried farming, herds and their language with them, and slowly settled nearly a third of Africa.</p>
+
+    <!-- STATS -->
+    <div style="margin-top:auto; display:flex; gap:14px; padding-top:22px;">
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #B4502A; padding:20px 18px;">
+        <div style="font-size:48px; line-height:1; font-weight:600; color:#B4502A;">≈500</div>
+        <div style="margin-top:8px; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.18em; text-transform:uppercase; color:#6E5D48;">Bantu languages<br>today</div>
+      </div>
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:20px 18px;">
+        <div style="font-size:48px; line-height:1; font-weight:600; color:#5f6a2f;">≈350M</div>
+        <div style="margin-top:8px; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.18em; text-transform:uppercase; color:#6E5D48;">First-language<br>speakers</div>
+      </div>
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #C98A2E; padding:20px 18px;">
+        <div style="font-size:48px; line-height:1; font-weight:600; color:#b07a28;">⅓</div>
+        <div style="margin-top:8px; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.18em; text-transform:uppercase; color:#6E5D48;">Of Africa<br>settled</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP COLUMN -->
+  <div style="grid-column:2; grid-row:2; position:relative; min-height:0; min-width:0; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+    <svg viewBox="0 0 700 780" preserveAspectRatio="xMidYMid meet" style="width:100%; height:100%; overflow:visible;">
+      <defs>
+        <marker id="headW" markerWidth="9" markerHeight="9" refX="6" refY="4.2" orient="auto"><path d="M0,0 L8,4.2 L0,8.4 L2.4,4.2 Z" fill="#B4502A"></path></marker>
+        <marker id="headE" markerWidth="9" markerHeight="9" refX="6" refY="4.2" orient="auto"><path d="M0,0 L8,4.2 L0,8.4 L2.4,4.2 Z" fill="#6F7A3A"></path></marker>
+      </defs>
+
+      <!-- graticule -->
+      <g stroke="#B8A57E" stroke-width="0.6" opacity="0.16">
+        <line x1="0" y1="200" x2="700" y2="200"></line>
+        <line x1="0" y1="340" x2="700" y2="340"></line>
+        <line x1="0" y1="480" x2="700" y2="480"></line>
+        <line x1="0" y1="620" x2="700" y2="620"></line>
+        <line x1="180" y1="0" x2="180" y2="780"></line>
+        <line x1="360" y1="0" x2="360" y2="780"></line>
+        <line x1="540" y1="0" x2="540" y2="780"></line>
+      </g>
+      <!-- equator marker -->
+      <text x="6" y="404" font-family="'Barlow Condensed',sans-serif" font-size="12" letter-spacing="0.2em" fill="rgba(59,46,34,.4)">EQUATOR</text>
+      <line x1="0" y1="400" x2="700" y2="400" stroke="#8a5a34" stroke-width="0.7" stroke-dasharray="3 5" opacity="0.25"></line>
+
+      <!-- continent -->
+      <polygon points="130.7,40 280,30 373,80 476,90 504,120 532,180 550.6,250 588,280 662.6,290 634.6,350 597.3,380 560,480 560,560 513,640 494.6,660 466.6,710 373.3,750 326.6,700 298.6,620 298.6,520 298.6,460 270.6,400 261.3,360 214.6,340 149.3,350 102.6,350 28,250 37.3,190 65.3,140 93.3,100"
+        fill="#D8C49C" stroke="#A98F63" stroke-width="1.6" stroke-linejoin="round"></polygon>
+
+      <!-- physical features (background geography) -->
+      <path d="M476,92 C 486,150 494,210 502,270 L506,322" fill="none" stroke="#6f8296" stroke-width="1.3" stroke-opacity="0.5" stroke-linecap="round"></path>
+      <g style="paint-order:stroke; stroke:#E7DCC4; stroke-width:2.6px; stroke-linejoin:round;" font-family="'Barlow Condensed',sans-serif" fill="#a8906a">
+        <text x="318" y="150" text-anchor="middle" font-size="20" letter-spacing="0.34em">SAHARA</text>
+        <text x="318" y="169" text-anchor="middle" font-size="10.5" letter-spacing="0.3em" fill="#b09872">DESERT</text>
+        <text x="292" y="260" text-anchor="middle" font-size="13" letter-spacing="0.3em" fill="#ab9068">SAHEL</text>
+        <text x="558" y="150" text-anchor="middle" font-size="10.5" letter-spacing="0.16em" fill="#6f8296">RED SEA</text>
+        <text x="556" y="300" text-anchor="middle" font-size="10" letter-spacing="0.1em" fill="#9c8663">ETHIOPIAN</text>
+        <text x="556" y="311" text-anchor="middle" font-size="10" letter-spacing="0.1em" fill="#9c8663">HIGHLANDS</text>
+        <text x="513" y="248" font-size="10.5" letter-spacing="0.16em" fill="#6f8296">NILE</text>
+      </g>
+
+      <!-- Bantu-speaking extent today -->
+      <polygon points="261.3,360 270.6,400 298.6,460 298.6,520 298.6,620 326.6,700 373.3,750 466.6,710 494.6,660 513,640 560,560 560,480 575,400 500,356 410,350 330,352"
+        fill="#8a5a34" fill-opacity="0.10" stroke="#8a5a34" stroke-opacity="0.45" stroke-width="1.4" stroke-dasharray="6 5" stroke-linejoin="round"></polygon>
+
+      <!-- WESTERN ROUTE -->
+      <path d="M280,345 C 340,392 384,410 392,448 C 400,502 340,522 332,566 C 362,622 410,636 432,662"
+        fill="none" stroke="#B4502A" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 9" marker-end="url(#headW)"
+        style="--len:1400; stroke-dashoffset:0; animation: drawRoute 2.4s ease-out both;"></path>
+
+      <!-- EASTERN ROUTE -->
+      <path d="M288,340 C 366,358 448,372 494,410"
+        fill="none" stroke="#6F7A3A" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 9" marker-end="url(#headE)"
+        style="--len:900; stroke-dashoffset:0; animation: drawRoute 1.9s ease-out .3s both;"></path>
+      <path d="M496,418 C 504,492 470,540 466,588 C 462,626 448,648 440,664"
+        fill="none" stroke="#6F7A3A" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 9" marker-end="url(#headE)"
+        style="--len:1000; stroke-dashoffset:0; animation: drawRoute 2.1s ease-out 1.5s both;"></path>
+
+      <!-- region markers -->
+      <g style="paint-order:stroke; stroke:#E7DCC4; stroke-width:3px; stroke-linejoin:round;">
+        <!-- Congo Basin -->
+        <circle cx="392" cy="448" r="5.5" fill="#463829"></circle>
+        <text x="408" y="446" font-family="'Barlow Condensed',sans-serif" font-size="18" font-weight="600" letter-spacing="0.1em" fill="#2E241B">CONGO BASIN</text>
+        <!-- Great Lakes -->
+        <circle cx="494" cy="412" r="5.5" fill="#463829"></circle>
+        <text x="510" y="410" font-family="'Barlow Condensed',sans-serif" font-size="18" font-weight="600" letter-spacing="0.1em" fill="#2E241B">GREAT LAKES</text>
+        <!-- Angola -->
+        <circle cx="332" cy="566" r="5.5" fill="#463829"></circle>
+        <text x="322" y="568" text-anchor="end" font-family="'Barlow Condensed',sans-serif" font-size="18" font-weight="600" letter-spacing="0.1em" fill="#2E241B">ANGOLA</text>
+        <!-- Zambezi -->
+        <circle cx="470" cy="560" r="5.5" fill="#463829"></circle>
+        <text x="486" y="558" font-family="'Barlow Condensed',sans-serif" font-size="18" font-weight="600" letter-spacing="0.1em" fill="#2E241B">ZAMBEZI</text>
+        <!-- Southern Africa -->
+        <circle cx="432" cy="664" r="5.5" fill="#463829"></circle>
+        <text x="420" y="668" text-anchor="end" font-family="'Barlow Condensed',sans-serif" font-size="18" font-weight="600" letter-spacing="0.1em" fill="#2E241B">SOUTHERN AFRICA</text>
+      </g>
+
+      <!-- earlier inhabitants: displaced / absorbed foragers & herders -->
+      <g style="paint-order:stroke; stroke:#E7DCC4; stroke-width:2.6px; stroke-linejoin:round;">
+        <path d="M440,494 L447,501 L440,508 L433,501 Z" fill="#EEE4D0" stroke="#64707a" stroke-width="2"></path>
+        <text x="452" y="497" font-family="'Barlow Condensed',sans-serif" font-size="14.5" font-weight="500" letter-spacing="0.06em" fill="#4f5a62">BATWA · AKA · BAKA</text>
+        <text x="452" y="510" font-family="'Barlow Condensed',sans-serif" font-size="11.5" font-style="italic" letter-spacing="0.04em" fill="#7b8189">forest foragers</text>
+        <path d="M362,632 L369,639 L362,646 L355,639 Z" fill="#EEE4D0" stroke="#64707a" stroke-width="2"></path>
+        <text x="350" y="635" text-anchor="end" font-family="'Barlow Condensed',sans-serif" font-size="14.5" font-weight="500" letter-spacing="0.06em" fill="#4f5a62">SAN · KHOI</text>
+        <text x="350" y="648" text-anchor="end" font-family="'Barlow Condensed',sans-serif" font-size="11.5" font-style="italic" letter-spacing="0.04em" fill="#7b8189">hunter-gatherers &amp; herders</text>
+        <path d="M505,352 L512,359 L505,366 L498,359 Z" fill="#EEE4D0" stroke="#64707a" stroke-width="2"></path>
+        <text x="516" y="355" font-family="'Barlow Condensed',sans-serif" font-size="14.5" font-weight="500" letter-spacing="0.06em" fill="#4f5a62">CENTRAL SUDANIC</text>
+        <text x="516" y="368" font-family="'Barlow Condensed',sans-serif" font-size="11.5" font-style="italic" letter-spacing="0.04em" fill="#7b8189">&amp; Nilotic groups</text>
+      </g>
+
+      <!-- modern country hints -->
+      <sc-if value="{{ showModernHints }}" hint-placeholder-val="{{ true }}">
+      <g font-family="'Barlow Condensed',sans-serif" font-size="11" font-weight="500" letter-spacing="0.1em" fill="#7d6b52" style="paint-order:stroke; stroke:#E7DCC4; stroke-width:2.6px; stroke-linejoin:round;">
+        <text x="250" y="372" text-anchor="end">CAMEROON</text>
+        <text x="278" y="405" text-anchor="end">GABON</text>
+        <text x="300" y="452" text-anchor="end">CONGO</text>
+        <text x="372" y="480">DR CONGO</text>
+        <text x="486" y="392" text-anchor="end">UGANDA</text>
+        <text x="548" y="432">KENYA</text>
+        <text x="516" y="470">TANZANIA</text>
+        <text x="345" y="528">ANGOLA</text>
+        <text x="435" y="544">ZAMBIA</text>
+        <text x="504" y="530">MALAWI</text>
+        <text x="458" y="598">ZIMBABWE</text>
+        <text x="516" y="580">MOZAMBIQUE</text>
+        <text x="330" y="610">NAMIBIA</text>
+        <text x="410" y="616">BOTSWANA</text>
+        <text x="402" y="708" text-anchor="end">SOUTH AFRICA</text>
+      </g>
+      </sc-if>
+
+      <!-- HOMELAND / ORIGIN -->
+      <sc-if value="{{ homelandEmphasis }}" hint-placeholder-val="{{ true }}">
+        <circle cx="282" cy="342" fill="#C98A2E" style="animation: homePulse 2.6s ease-out infinite;"></circle>
+        <circle cx="282" cy="342" r="26" fill="none" stroke="#C98A2E" stroke-width="1.4" opacity="0.55"></circle>
+      </sc-if>
+      <circle cx="282" cy="342" r="9" fill="#C98A2E" stroke="#7a4e14" stroke-width="1.5"></circle>
+      <text x="270" y="316" text-anchor="end" font-family="'Barlow Condensed',sans-serif" font-size="20" font-weight="700" letter-spacing="0.08em" fill="#8a5a1e" style="paint-order:stroke; stroke:#E7DCC4; stroke-width:3px; stroke-linejoin:round;">GRASSFIELDS</text>
+      <text x="270" y="330" text-anchor="end" font-family="'Barlow Condensed',sans-serif" font-size="13" letter-spacing="0.14em" fill="#8a5a34" style="paint-order:stroke; stroke:#E7DCC4; stroke-width:2.6px; stroke-linejoin:round;">HOMELAND · c. 3000 BCE</text>
+
+      <!-- compass -->
+      <g transform="translate(626,60)">
+        <path d="M0,-22 L7,10 L0,3 L-7,10 Z" fill="#6E5D48"></path>
+        <text x="0" y="-28" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="14" font-weight="600" fill="#6E5D48">N</text>
+      </g>
+    </svg>
+
+    <!-- NAME MEANING -->
+    <div style="position:absolute; left:2px; top:4px; max-width:212px; background:rgba(252,248,239,.85); border:1px solid rgba(59,46,34,.16); border-left:3px solid #C98A2E; padding:11px 14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#b07a28; margin-bottom:4px;">What "Bantu" means</div>
+      <div style="font-size:12.5px; line-height:1.42; color:#5c4d3b;">Across these languages the root <strong style="font-weight:600;">-ntu</strong> means "a person": <em>mu-ntu</em> (one person) → <em>ba-ntu</em>, "the people." The word <em>abantu</em> still lives in Zulu and Xhosa today — a 4,000-year-old fingerprint. Bleek named the family in 1862.</div>
+    </div>
+
+    <!-- LEGEND -->
+    <div style="position:absolute; left:2px; bottom:8px; background:rgba(252,248,239,.82); border:1px solid rgba(59,46,34,.16); padding:16px 18px; backdrop-filter:blur(1px);">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34; margin-bottom:11px;">Migration Routes</div>
+      <div style="display:flex; flex-direction:column; gap:9px; font-family:'Barlow Condensed',sans-serif; font-size:16px; color:#3B2E22;">
+        <div style="display:flex; align-items:center; gap:11px;"><span style="width:30px; height:0; border-top:3px dashed #B4502A;"></span> Western stream — into the Congo forest</div>
+        <div style="display:flex; align-items:center; gap:11px;"><span style="width:30px; height:0; border-top:3px dashed #6F7A3A;"></span> Eastern stream — via the Great Lakes</div>
+        <div style="display:flex; align-items:center; gap:11px;"><span style="width:14px; height:14px; border-radius:50%; background:#C98A2E; border:1.5px solid #7a4e14;"></span> Proposed homeland</div>
+        <div style="display:flex; align-items:center; gap:11px;"><span style="width:12px; height:12px; margin:0 1px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg);"></span> Earlier foragers &amp; herders</div>
+        <div style="display:flex; align-items:center; gap:11px;"><span style="width:26px; height:14px; background:rgba(138,90,52,0.14); border:1.5px dashed #a07b52;"></span> Bantu-speaking Africa today</div>
+      </div>
+    </div>
+    <div style="position:absolute; right:0; bottom:6px; max-width:190px; background:rgba(252,248,239,.9); border:1px solid rgba(59,46,34,.16); border-left:3px solid #6F7A3A; padding:9px 12px;"><div style="font-family:'Barlow Condensed',sans-serif; font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:#5f6a2f; margin-bottom:4px;">Where did they start?</div><div style="font-size:12px; line-height:1.42; color:#5c4d3b;">The Bantu languages most alike to one another all sit in one small area on the <strong style="font-weight:600;">Nigeria–Cameroon border</strong> — so that is where the family began. DNA now agrees.</div></div>
+  </div>
+
+  <!-- PEOPLES PANEL -->
+  <div style="grid-column:3; grid-row:2; min-height:0; display:flex; flex-direction:column; padding-top:6px;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+      <span style="width:30px; height:2px; background:#B4502A;"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.24em; text-transform:uppercase; color:#8a5a34;">Peoples of the Route</span>
+    </div>
+    <h2 style="margin:0 0 6px; font-size:22px; font-weight:600; line-height:1.05; color:#2E241B;">Who moved,<br>who was here first</h2>
+
+    <div style="font-family:'Barlow Condensed',sans-serif; font-size:12.5px; letter-spacing:.2em; text-transform:uppercase; color:#8a5a34; margin-bottom:6px;">Major Bantu peoples today</div>
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <div style="display:flex; gap:12px; align-items:baseline;">
+        <span style="flex:0 0 9px; width:9px; height:9px; border-radius:50%; background:#B4502A; transform:translateY(-1px);"></span>
+        <div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13.5px; letter-spacing:.12em; text-transform:uppercase; color:#6E5D48;">Congo Basin</div><div style="font-size:17.5px; color:#2E241B;">Kongo · Luba · Mongo</div></div>
+      </div>
+      <div style="display:flex; gap:12px; align-items:baseline;">
+        <span style="flex:0 0 9px; width:9px; height:9px; border-radius:50%; background:#6F7A3A; transform:translateY(-1px);"></span>
+        <div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13.5px; letter-spacing:.12em; text-transform:uppercase; color:#6E5D48;">Great Lakes</div><div style="font-size:17.5px; color:#2E241B;">Ganda · Kikuyu · Sukuma</div></div>
+      </div>
+      <div style="display:flex; gap:12px; align-items:baseline;">
+        <span style="flex:0 0 9px; width:9px; height:9px; border-radius:50%; background:#8a5a34; transform:translateY(-1px);"></span>
+        <div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13.5px; letter-spacing:.12em; text-transform:uppercase; color:#6E5D48;">East Africa</div><div style="font-size:17.5px; color:#2E241B;">Kamba · Luhya · Chaga · Nyamwezi</div></div>
+      </div>
+      <div style="display:flex; gap:12px; align-items:baseline;">
+        <span style="flex:0 0 9px; width:9px; height:9px; border-radius:50%; background:#463829; transform:translateY(-1px);"></span>
+        <div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13.5px; letter-spacing:.12em; text-transform:uppercase; color:#6E5D48;">Southern Africa</div><div style="font-size:17.5px; color:#2E241B;">Zulu · Xhosa · Shona · Sotho · Tswana</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top:7px; font-size:12.5px; line-height:1.3; font-style:italic; color:#7d6b52;">The coastal <strong style="font-weight:600; font-style:normal;">Swahili</strong> are a Bantu-rooted but heavily mixed (Arab, Persian, Indian) trading population — a notable creole, not a single tribe.</div>
+
+    <div style="height:1px; background:rgba(59,46,34,.2); margin:7px 0 7px;"></div>
+
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:7px;">
+      <span style="width:11px; height:11px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg);"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; color:#4f5a62;">Earlier inhabitants</span>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <div><div style="font-size:17.5px; color:#2E241B;">Batwa · Aka · Baka</div><div style="font-size:14px; line-height:1.28; color:#6E5D48;">Rainforest foragers of the Congo Basin, largely absorbed.</div></div>
+      <div><div style="font-size:17.5px; color:#2E241B;">San &amp; Khoi (Khoisan)</div><div style="font-size:14px; line-height:1.28; color:#6E5D48;">Hunter-gatherers &amp; herders of East &amp; Southern Africa, displaced or intermixed.</div></div>
+      <div><div style="font-size:17.5px; color:#2E241B;">Cushitic &amp; Central Sudanic</div><div style="font-size:14px; line-height:1.28; color:#6E5D48;">Herders &amp; fishers of East &amp; Central Africa — displaced, absorbed, or living alongside.</div></div>
+    </div>
+    <div style="margin-top:7px; font-size:12px; line-height:1.3; font-style:italic; color:#8a7d68;">Many earlier communities left no written record — much of who they were is reconstructed from genetics and language, and remains a great unknown.</div>
+  </div>
+
+  <!-- TIMELINE -->
+  <sc-if value="{{ showTimeline }}" hint-placeholder-val="{{ true }}">
+  <div style="grid-column:1 / -1; grid-row:3; border-top:1px solid rgba(59,46,34,.2); padding-top:16px;">
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:26px; position:relative;">
+      <div style="position:absolute; top:6px; left:0; right:0; height:2px; background:rgba(59,46,34,.18);"></div>
+      <div style="position:relative;">
+        <div style="width:14px; height:14px; border-radius:50%; background:#C98A2E; border:2px solid #E9DEC7; margin-bottom:10px;"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:700; letter-spacing:.06em; color:#B4502A;">c. 3000 BCE</div>
+        <div style="font-size:20px; font-weight:600; margin-top:3px; color:#2E241B;">The homeland</div>
+        <div style="font-size:16px; line-height:1.4; margin-top:5px; color:#6E5D48;">Proto-Bantu farmers in the Grassfields highlands.</div>
+      </div>
+      <div style="position:relative;">
+        <div style="width:14px; height:14px; border-radius:50%; background:#B4502A; border:2px solid #E9DEC7; margin-bottom:10px;"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:700; letter-spacing:.06em; color:#B4502A;">c. 1500 BCE</div>
+        <div style="font-size:20px; font-weight:600; margin-top:3px; color:#2E241B;">Into the forest</div>
+        <div style="font-size:16px; line-height:1.4; margin-top:5px; color:#6E5D48;">Following savanna corridors a dry spell opened through the trees, the western stream threads the Congo rainforest — losing its cattle to the tsetse fly.</div>
+        <div style="margin-top:10px; display:flex; align-items:center; gap:8px;"><span style="width:10px; height:10px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg); flex:0 0 auto;"></span><span style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.03em; color:#4f5a62;">Meets Batwa forest foragers</span></div>
+      </div>
+      <div style="position:relative;">
+        <div style="width:14px; height:14px; border-radius:50%; background:#6F7A3A; border:2px solid #E9DEC7; margin-bottom:10px;"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:700; letter-spacing:.06em; color:#B4502A;">c. 1000 BCE</div>
+        <div style="font-size:20px; font-weight:600; margin-top:3px; color:#2E241B;">Eastern stream</div>
+        <div style="font-size:16px; line-height:1.4; margin-top:5px; color:#6E5D48;">Communities reach the Great Lakes — regaining cattle, and gaining iron and millet.</div>
+        <div style="margin-top:10px; display:flex; align-items:center; gap:8px;"><span style="width:10px; height:10px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg); flex:0 0 auto;"></span><span style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.03em; color:#4f5a62;">Meets Cushitic herders &amp; foragers</span></div>
+      </div>
+      <div style="position:relative;">
+        <div style="width:14px; height:14px; border-radius:50%; background:#6F7A3A; border:2px solid #E9DEC7; margin-bottom:10px;"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:700; letter-spacing:.06em; color:#B4502A;">c. 400 BCE</div>
+        <div style="font-size:20px; font-weight:600; margin-top:3px; color:#2E241B;">Iron Age spread</div>
+        <div style="font-size:16px; line-height:1.4; margin-top:5px; color:#6E5D48;">Ironworking travels with farming villages.</div>
+      </div>
+      <div style="position:relative;">
+        <div style="width:14px; height:14px; border-radius:50%; background:#463829; border:2px solid #E9DEC7; margin-bottom:10px;"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:700; letter-spacing:.06em; color:#B4502A;">c. 300–500 CE</div>
+        <div style="font-size:20px; font-weight:600; margin-top:3px; color:#2E241B;">The far south</div>
+        <div style="font-size:16px; line-height:1.4; margin-top:5px; color:#6E5D48;">Bantu speakers reach Southern Africa.</div>
+        <div style="margin-top:10px; display:flex; align-items:center; gap:8px;"><span style="width:10px; height:10px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg); flex:0 0 auto;"></span><span style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.03em; color:#4f5a62;">Displaces &amp; absorbs San &amp; Khoi</span></div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+
+
+</div>
+<div class="page-wrap">
+<!-- ============ PAGE 02 · THE BANTU ADVANTAGE ============ -->
+<div data-screen-label="The Bantu Advantage" style="position:relative; width:1920px; height:1080px; background:#E9DEC7; background-image: radial-gradient(circle at 80% 18%, #EFE6D2 0%, #E4D8BF 55%, #DED0B3 100%); color:#3B2E22; font-family:'Spectral', Georgia, serif; overflow:hidden; padding:58px 66px 52px; display:flex; flex-direction:column; gap:24px;">
+  <div style="position:absolute; inset:26px; border:1px solid rgba(59,46,34,.16); pointer-events:none;"></div>
+  <div style="position:absolute; top:34px; right:38px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.28em; color:rgba(59,46,34,.45);">TECHNOLOGY · FARMING · LIVELIHOOD</div>
+
+  <div>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span style="width:44px; height:2px; background:#B4502A;"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:.42em; text-transform:uppercase; color:#8a5a34;">Why they spread so far</span>
+    </div>
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-top:12px;">
+      <h1 style="margin:0; font-size:62px; line-height:.96; font-weight:600; letter-spacing:-.01em; color:#2E241B;">The Bantu Advantage</h1>
+      <p style="margin:0 0 6px; font-size:19px; line-height:1.4; font-style:italic; color:#6E5D48; max-width:620px; text-align:right;">It wasn't conquest — it was farming. Crops and herds from the north let their villages grow faster than the hunter-gatherers they met. Numbers, not weapons, drove the spread; iron came later. But climate, drought and disease still set hard limits.</p>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:1fr 1fr; gap:16px; flex:0 0 auto;">
+    <div style="display:flex; gap:15px; align-items:flex-start; background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #C98A2E; padding:16px 18px;">
+      <div style="width:74px; height:74px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="70" height="70"><path d="M14 41 h20" stroke="#8a5a34" stroke-width="1.6" stroke-linecap="round" opacity="0.4" fill="none"></path><path d="M24 41 V22" data-a style="animation:ill-grow 3.4s ease-in-out infinite; transform-origin:50% 100%;" fill="none" stroke="#C98A2E" stroke-width="2.4" stroke-linecap="round"></path><g data-a style="animation:ill-sway 3.4s ease-in-out infinite; transform-origin:50% 100%;" fill="#C98A2E"><path d="M24 27 C 18 25 15 28 14 32 C 19 32 23 31 24 27 Z"></path><path d="M24 31 C 30 29 33 32 34 36 C 29 36 25 35 24 31 Z"></path></g></svg></div>
+      <div>
+        <div style="display:flex; align-items:baseline; gap:10px;"><span style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:#C98A2E;">01</span><h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Crops from the north</h3></div>
+        <p style="margin:7px 0 0; font-size:14px; line-height:1.34; color:#6E5D48;">Every crop native to Africa — yams and oil palm from the western forests, sorghum and millet from the Sahel — was first farmed <strong style="font-weight:600; color:#2E241B;">north of the equator</strong>. The Bantu carried these crops south, into land whose wild plants no one had ever farmed.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:flex-start; background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:16px 18px;">
+      <div style="width:74px; height:74px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="70" height="70"><g data-a style="animation:ill-sway 3s ease-in-out infinite; transform-origin:50% 100%;"><g fill="none" stroke="#6F7A3A" stroke-width="2" stroke-linecap="round"><path d="M24 40 V19"></path><path d="M24 39 C 18 33 16 27 17 21"></path><path d="M24 39 C 30 33 32 27 31 21"></path></g><g fill="#6F7A3A"><ellipse cx="24" cy="16" rx="2.4" ry="4"></ellipse><ellipse cx="17" cy="18" rx="2" ry="3.4"></ellipse><ellipse cx="31" cy="18" rx="2" ry="3.4"></ellipse></g></g><path d="M14 42 h20" stroke="#8a5a34" stroke-width="1.6" stroke-linecap="round" opacity="0.4" fill="none"></path></svg></div>
+      <div>
+        <div style="display:flex; align-items:baseline; gap:10px;"><span style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:#6F7A3A;">02</span><h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Food &amp; sheer numbers</h3></div>
+        <p style="margin:7px 0 0; font-size:14px; line-height:1.34; color:#6E5D48;">Farming feeds far more people than hunting. Crowded villages and stored food let farmers slowly <strong style="font-weight:600; color:#2E241B;">outnumber and outlast</strong> hunter-gatherers — the quiet engine of the whole expansion.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:flex-start; background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #8a5a34; padding:16px 18px;">
+      <div style="width:74px; height:74px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="70" height="70"><g data-a style="animation:ill-bob 2.6s ease-in-out infinite;"><ellipse cx="23" cy="27" rx="11" ry="6.5" fill="#8a5a34" fill-opacity="0.14" stroke="#8a5a34" stroke-width="2"></ellipse><circle cx="35" cy="22" r="4.4" fill="#8a5a34" fill-opacity="0.14" stroke="#8a5a34" stroke-width="2"></circle><g fill="none" stroke="#8a5a34" stroke-width="2" stroke-linecap="round"><path d="M33 18 C 32 15 34 14 35 14"></path><path d="M38 18 C 39 15 41 15 41 16"></path><path d="M17 33 v6"></path><path d="M22 34 v6"></path><path d="M27 34 v6"></path><path d="M31 33 v6"></path><path d="M12 23 C 9 25 9 31 11 34"></path></g></g></svg></div>
+      <div>
+        <div style="display:flex; align-items:baseline; gap:10px;"><span style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:#8a5a34;">03</span><h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Cattle &amp; herds</h3></div>
+        <p style="margin:7px 0 0; font-size:14px; line-height:1.34; color:#6E5D48;">To their crops the Bantu added cattle, goats and sheep — protein, manure and portable, countable wealth, wherever tsetse fly and climate let herds survive.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:flex-start; background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #B4502A; padding:16px 18px;">
+      <div style="width:74px; height:74px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="70" height="70"><g fill="none" stroke="#B4502A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 35 h16"></path><path d="M19 35 v-4"></path><path d="M29 35 v-4"></path><path d="M15 27 h15 l-2 3 h-11 z" fill="#B4502A" fill-opacity="0.14"></path><path d="M30 27 l4 2 -4 2"></path><g data-a style="animation:ill-tap 1.3s ease-in-out infinite;"><path d="M21 23 l12 -11"></path><path d="M30 9 l6 6"></path></g></g><g stroke="none" fill="#C98A2E"><circle cx="20" cy="25" r="1.4" data-a style="animation:ill-twinkle 1.3s ease-in-out infinite;"></circle><circle cx="24" cy="23" r="1" data-a style="animation:ill-twinkle 1.3s .4s ease-in-out infinite;"></circle></g></svg></div>
+      <div>
+        <div style="display:flex; align-items:baseline; gap:10px;"><span style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:#B4502A;">04</span><h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Ironworking — the sequel</h3></div>
+        <p style="margin:7px 0 0; font-size:14px; line-height:1.34; color:#6E5D48;">Often seen as the trigger, iron was really a latecomer: it appears only around <strong style="font-weight:600; color:#2E241B;">400 BCE</strong>, long after the migration began. Hoes, axes and spears strengthened a spread that was already rolling.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:flex-start; background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:16px 18px;">
+      <div style="width:74px; height:74px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="70" height="70"><g data-a style="animation:ill-sway 3.6s ease-in-out infinite; transform-origin:50% 100%;"><path d="M17 20 C 12 26 13 36 24 39 C 35 36 36 26 31 20 Z" fill="#6F7A3A" fill-opacity="0.12" stroke="#6F7A3A" stroke-width="2.2" stroke-linejoin="round"></path><path d="M16 20 C 20 17 28 17 32 20" fill="none" stroke="#6F7A3A" stroke-width="2.2" stroke-linecap="round"></path><path d="M15 27 H33" stroke="#B4502A" stroke-width="1.4" stroke-dasharray="2 2" opacity="0.55" fill="none"></path></g></svg></div>
+      <div>
+        <div style="display:flex; align-items:baseline; gap:10px;"><span style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:#6F7A3A;">05</span><h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Pottery &amp; storage</h3></div>
+        <p style="margin:7px 0 0; font-size:14px; line-height:1.34; color:#6E5D48;">Fired pottery let them store grain and cook new foods, anchoring permanent villages.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:flex-start; background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #463829; padding:16px 18px;">
+      <div style="width:74px; height:74px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="70" height="70"><g fill="none" stroke="#B4502A" stroke-width="1.8" stroke-linecap="round"><path d="M24 16 L14 33"></path><path d="M24 16 L34 33"></path><path d="M14 33 H34"></path></g><g fill="#B4502A"><circle cx="24" cy="15" r="3.4" data-a style="animation:ill-pulse 2.1s ease-in-out infinite;"></circle><circle cx="14" cy="33" r="3.4" data-a style="animation:ill-pulse 2.1s .5s ease-in-out infinite;"></circle><circle cx="34" cy="33" r="3.4" data-a style="animation:ill-pulse 2.1s 1s ease-in-out infinite;"></circle></g></svg></div>
+      <div>
+        <div style="display:flex; align-items:baseline; gap:10px;"><span style="font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700; color:#463829;">06</span><h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Kinship networks</h3></div>
+        <p style="margin:7px 0 0; font-size:14px; line-height:1.34; color:#6E5D48;">Lineage and clan systems organised labour, land and the founding of each new settlement.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1; min-height:0; display:grid; grid-template-columns:1.5fr 0.92fr 1.18fr; gap:18px;">
+    <div style="background:rgba(255,252,244,.42); border:1px solid rgba(59,46,34,.14); padding:20px 24px; display:flex; flex-direction:column;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34; margin-bottom:14px;">How they farmed · shifting cultivation</div>
+      <div style="display:flex; align-items:stretch; gap:12px;">
+        <div style="flex:1;"><div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; letter-spacing:.06em; color:#B4502A; margin-bottom:5px;">1 — CLEAR &amp; BURN</div><div style="font-size:15.5px; line-height:1.38; color:#5c4d3b;">Fell and fire a patch of forest or bush; the ash fertilises thin tropical soil.</div></div>
+        <div style="align-self:center; font-size:24px; color:#a98f63;">→</div>
+        <div style="flex:1;"><div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; letter-spacing:.06em; color:#6F7A3A; margin-bottom:5px;">2 — PLANT &amp; INTERCROP</div><div style="font-size:15.5px; line-height:1.38; color:#5c4d3b;">Sow several crops together for a staggered harvest that feeds the village year-round.</div></div>
+        <div style="align-self:center; font-size:24px; color:#a98f63;">→</div>
+        <div style="flex:1;"><div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; letter-spacing:.06em; color:#b07a28; margin-bottom:5px;">3 — FALLOW &amp; MOVE</div><div style="font-size:15.5px; line-height:1.38; color:#5c4d3b;">After a few seasons the plot rests and the village opens new land nearby.</div></div>
+      </div>
+      <div style="height:1px; background:rgba(59,46,34,.14); margin:16px 0 12px;"></div>
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.2em; text-transform:uppercase; color:#8a5a34; margin-bottom:11px;">Staple crops</div>
+      <div style="display:flex; flex-wrap:wrap; gap:9px;">
+        <div style="border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:5px 14px;"><span style="font-size:16px; color:#2E241B;">Yams</span> <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.06em; color:#8a7a63;">W. AFRICA</span></div>
+        <div style="border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:5px 14px;"><span style="font-size:16px; color:#2E241B;">Oil palm</span> <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.06em; color:#8a7a63;">W. AFRICA</span></div>
+        <div style="border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:5px 14px;"><span style="font-size:16px; color:#2E241B;">Sorghum</span> <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.06em; color:#8a7a63;">SAHEL</span></div>
+        <div style="border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:5px 14px;"><span style="font-size:16px; color:#2E241B;">Millet</span> <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.06em; color:#8a7a63;">SAHEL</span></div>
+        <div style="border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:5px 14px;"><span style="font-size:16px; color:#2E241B;">Cowpeas</span> <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.06em; color:#8a7a63;">W. AFRICA</span></div>
+        <div style="border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:5px 14px;"><span style="font-size:16px; color:#2E241B;">Bananas</span> <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:.06em; color:#8a7a63;">VIA SE ASIA</span></div>
+      </div>
+      <div style="height:120px; flex:0 0 auto; margin-top:14px;"><div style="width:100%; height:120px; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 72% 34%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14);"><svg class="ill" viewBox="0 0 240 120" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g data-a style="animation:ill-spin 26s linear infinite;"><g stroke="#C98A2E" stroke-width="2.4" stroke-linecap="round"><path d="M202 15 v6"></path><path d="M202 47 v6"></path><path d="M183 34 h6"></path><path d="M215 34 h6"></path><path d="M188 20 l4 4"></path><path d="M212 44 l4 4"></path><path d="M216 20 l-4 4"></path><path d="M192 44 l-4 4"></path></g></g><circle cx="202" cy="34" r="9" fill="#C98A2E" fill-opacity="0.85" data-a style="animation:ill-pulse 3.4s ease-in-out infinite;"></circle><path d="M10 98 H230" stroke="#8a5a34" stroke-width="2" stroke-linecap="round" opacity="0.5"></path><path d="M22 107 H206" stroke="#8a5a34" stroke-width="1.3" stroke-dasharray="4 6" opacity="0.32"></path><g fill="#6F7A3A" fill-opacity="0.10" stroke="#6F7A3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M30 97 V80 L46 66 L62 80 V97 Z"></path><path d="M24 80 L46 62 L68 80" fill="none"></path><path d="M42 97 V87 H50 V97" fill="none"></path></g><g fill="none" stroke="#6F7A3A" stroke-width="2" stroke-linecap="round"><g data-a style="animation:ill-sway 3s ease-in-out infinite; transform-origin:50% 100%;"><path d="M100 98 V82"></path><path d="M100 87 l-5 -4"></path><path d="M100 87 l5 -4"></path></g><g data-a style="animation:ill-sway 3s .3s ease-in-out infinite; transform-origin:50% 100%;"><path d="M124 98 V82"></path><path d="M124 87 l-5 -4"></path><path d="M124 87 l5 -4"></path></g><g data-a style="animation:ill-sway 3s .6s ease-in-out infinite; transform-origin:50% 100%;"><path d="M148 98 V82"></path><path d="M148 87 l-5 -4"></path><path d="M148 87 l5 -4"></path></g><g data-a style="animation:ill-sway 3s .9s ease-in-out infinite; transform-origin:50% 100%;"><path d="M172 98 V82"></path><path d="M172 87 l-5 -4"></path><path d="M172 87 l5 -4"></path></g><g data-a style="animation:ill-sway 3s 1.2s ease-in-out infinite; transform-origin:50% 100%;"><path d="M196 98 V82"></path><path d="M196 87 l-5 -4"></path><path d="M196 87 l5 -4"></path></g></g></svg></div></div>
+    </div>
+
+    <div style="background:rgba(255,252,244,.42); border:1px solid rgba(59,46,34,.14); padding:20px 24px; display:flex; flex-direction:column;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34; margin-bottom:12px;">Way of life</div>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <div style="display:flex; gap:12px; align-items:baseline;"><span style="flex:0 0 auto; width:8px; height:8px; background:#B4502A;"></span><span style="font-size:17px; color:#3B2E22;">Permanent farming villages</span></div>
+        <div style="display:flex; gap:12px; align-items:baseline;"><span style="flex:0 0 auto; width:8px; height:8px; background:#6F7A3A;"></span><span style="font-size:17px; color:#3B2E22;">Mixed farming, herding &amp; fishing</span></div>
+        <div style="display:flex; gap:12px; align-items:baseline;"><span style="flex:0 0 auto; width:8px; height:8px; background:#C98A2E;"></span><span style="font-size:17px; color:#3B2E22;">Ironsmiths held high, near-sacred status</span></div>
+        <div style="display:flex; gap:12px; align-items:baseline;"><span style="flex:0 0 auto; width:8px; height:8px; background:#8a5a34;"></span><span style="font-size:17px; color:#3B2E22;">Extended-family homesteads &amp; lineages</span></div>
+        <div style="display:flex; gap:12px; align-items:baseline;"><span style="flex:0 0 auto; width:8px; height:8px; background:#463829;"></span><span style="font-size:17px; color:#3B2E22;">Cattle as wealth &amp; bridewealth</span></div>
+        <div style="display:flex; gap:12px; align-items:baseline;"><span style="flex:0 0 auto; width:8px; height:8px; background:#B4502A;"></span><span style="font-size:17px; color:#3B2E22;">Trade in iron, salt, copper &amp; pottery</span></div>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,252,244,.42); border:1px solid rgba(59,46,34,.14); border-top:3px solid #64707a; padding:18px 22px; display:flex; flex-direction:column;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.22em; text-transform:uppercase; color:#4f5a62; margin-bottom:5px;">But not anywhere</div>
+      <div style="font-size:14.5px; font-style:italic; line-height:1.35; color:#6E5D48; margin-bottom:13px;">Where climate, aridity or earlier farmers held firm, the expansion stalled — or was pushed back.</div>
+      <div style="display:flex; flex-direction:column; gap:11px;">
+        <div style="display:flex; gap:10px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:5px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg);"></span><div style="font-size:14px; line-height:1.36; color:#5c4d3b;"><strong style="font-weight:600; color:#2E241B;">The south-western Cape</strong> — winter rains suited neither sorghum nor millet; farming stopped at the Fish River. When settlers later met the Xhosa here, subduing them took nine wars across 175 years.</div></div>
+        <div style="display:flex; gap:10px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:5px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg);"></span><div style="font-size:14px; line-height:1.36; color:#5c4d3b;"><strong style="font-weight:600; color:#2E241B;">Kalahari &amp; Namib drylands</strong> — too arid for their crops; San foragers and Khoe herders kept the desert.</div></div>
+        <div style="display:flex; gap:10px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:5px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg);"></span><div style="font-size:14px; line-height:1.36; color:#5c4d3b;"><strong style="font-weight:600; color:#2E241B;">Rainforest &amp; tsetse belts</strong> — thick forest and cattle disease slowed settlement; forest foragers persisted.</div></div>
+        <div style="display:flex; gap:10px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:5px; background:#EEE4D0; border:2px solid #64707a; transform:rotate(45deg);"></span><div style="font-size:14px; line-height:1.36; color:#5c4d3b;"><strong style="font-weight:600; color:#2E241B;">Ethiopian highlands &amp; the Horn</strong> — already farmed by Cushitic &amp; Semitic peoples; the wave stopped short.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="page-wrap">
+<!-- ============ PAGE 03 · BELIEF ============ -->
+<div data-screen-label="Bantu Belief" style="position:relative; width:1920px; height:1080px; background:#E9DEC7; background-image: radial-gradient(circle at 50% 10%, #EFE6D2 0%, #E4D8BF 58%, #DBCCAE 100%); color:#3B2E22; font-family:'Spectral', Georgia, serif; overflow:hidden; padding:58px 66px 50px; display:flex; flex-direction:column; gap:22px;">
+  <div style="position:absolute; inset:26px; border:1px solid rgba(59,46,34,.16); pointer-events:none;"></div>
+  <div style="position:absolute; top:34px; right:38px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.28em; color:rgba(59,46,34,.45);">COSMOLOGY · ANCESTORS · RITUAL</div>
+
+  <div>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span style="width:44px; height:2px; background:#B4502A;"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:.42em; text-transform:uppercase; color:#8a5a34;">Traditional Bantu religion</span>
+    </div>
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-top:12px;">
+      <h1 style="margin:0; font-size:60px; line-height:.96; font-weight:600; letter-spacing:-.01em; color:#2E241B;">Spirits, Ancestors &amp; the Creator</h1>
+      <p style="margin:0 0 6px; font-size:19px; line-height:1.4; font-style:italic; color:#6E5D48; max-width:600px; text-align:right;">Hundreds of Bantu peoples share the same basic beliefs: a distant creator, ever-present ancestors, and a world alive with spirit.</p>
+    </div>
+  </div>
+
+  <div style="flex:1; min-height:0; display:grid; grid-template-columns:1fr 1.12fr 1fr; gap:22px; align-items:stretch;">
+
+    <!-- LEFT: beliefs -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-left:3px solid #C98A2E; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:100%; height:90px; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 38%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g data-a style="animation:ill-spin 24s linear infinite;"><g stroke="#C98A2E" stroke-width="2.4" stroke-linecap="round"><path d="M138 45 H147"></path><path d="M132.7 57.7 L139.1 64.1"></path><path d="M120 63 V72"></path><path d="M107.3 57.7 L100.9 64.1"></path><path d="M102 45 H93"></path><path d="M107.3 32.3 L100.9 25.9"></path><path d="M120 27 V18"></path><path d="M132.7 32.3 L139.1 25.9"></path></g></g><circle cx="120" cy="45" r="14" fill="none" stroke="#C98A2E" stroke-width="2.6" data-a style="animation:ill-pulse 4s ease-in-out infinite;"></circle><circle cx="120" cy="45" r="5" fill="#C98A2E"></circle></svg></div>
+        <div>
+          <h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">The distant Creator</h3>
+          <p style="margin:7px 0 0; font-size:15px; line-height:1.4; color:#6E5D48;">A supreme god made the world, then withdrew — rarely worshipped directly.</p>
+          <div style="margin-top:9px; font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.06em; color:#8a5a34;">Nzambi · Mulungu · Leza · Mwari · Nyambe</div>
+        </div>
+      </div>
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-left:3px solid #B4502A; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:100%; height:90px; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 38%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><path d="M44 72 H196" stroke="#8a5a34" stroke-width="1.4" stroke-linecap="round" opacity="0.35"></path><g fill="#B4502A"><g data-a style="animation:ill-twinkle 3s ease-in-out infinite;"><circle cx="64" cy="34" r="5"></circle><path d="M55 68 L64 43 L73 68 Z"></path></g><g data-a style="animation:ill-twinkle 3s .5s ease-in-out infinite;"><circle cx="102" cy="34" r="5"></circle><path d="M93 68 L102 43 L111 68 Z"></path></g><g data-a style="animation:ill-twinkle 3s 1s ease-in-out infinite;"><circle cx="140" cy="34" r="5"></circle><path d="M131 68 L140 43 L149 68 Z"></path></g><g data-a style="animation:ill-twinkle 3s 1.5s ease-in-out infinite;"><circle cx="178" cy="34" r="5"></circle><path d="M169 68 L178 43 L187 68 Z"></path></g></g></svg></div>
+        <div>
+          <h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Ancestors — the living dead</h3>
+          <p style="margin:7px 0 0; font-size:15px; line-height:1.4; color:#6E5D48;">The dead remain present, guiding and protecting their kin. This is the heart of daily religion.</p>
+          <div style="margin-top:9px; font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.06em; color:#8a5a34;">Badimo · Vadzimu · Amadlozi · Bazimu</div>
+        </div>
+      </div>
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-left:3px solid #6F7A3A; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:100%; height:90px; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 38%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><path d="M0 72 Q60 58 120 68 T240 64" fill="none" stroke="#6F7A3A" stroke-width="2" opacity="0.5"></path><g fill="#6F7A3A" fill-opacity="0.16" stroke="#6F7A3A" stroke-width="2" stroke-linejoin="round"><path d="M70 48 L59 72 H81 Z"></path><path d="M170 48 L159 72 H181 Z"></path></g><g stroke="#6F7A3A" stroke-width="2" stroke-linecap="round"><path d="M70 72 v6"></path><path d="M170 72 v6"></path></g><path d="M10 80 C 60 72 100 84 140 78 C 180 73 210 82 232 79" fill="none" stroke="#6f8296" stroke-width="3" stroke-linecap="round" stroke-dasharray="7 7" style="animation:ill-dash 2.2s linear infinite;"></path></svg></div>
+        <div>
+          <h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Spirits in the land</h3>
+          <p style="margin:7px 0 0; font-size:15px; line-height:1.4; color:#6E5D48;">Rivers, forests, hills and animals hold spirits that must be respected and appeased.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTRE: cosmology -->
+    <div style="background:rgba(255,252,244,.42); border:1px solid rgba(59,46,34,.14); padding:22px 26px; display:flex; flex-direction:column;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34; text-align:center; margin-bottom:8px;">The order of the cosmos</div>
+      <div style="flex:1; display:flex; align-items:center;">
+        <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="text-align:center; padding:12px 22px; border:2px solid #C98A2E; border-radius:50%/60%; background:rgba(201,138,46,.10);">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.16em; text-transform:uppercase; color:#b07a28;">Creator</div>
+            <div style="font-size:16px; color:#6E5D48;">remote &amp; supreme</div>
+          </div>
+          <div style="width:2px; height:26px; background:linear-gradient(#C98A2E,#B4502A);"></div>
+          <div style="text-align:center; padding:16px 30px; border:2px solid #B4502A; background:rgba(180,80,42,.10);">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.16em; text-transform:uppercase; color:#B4502A;">Ancestral spirits</div>
+            <div style="font-size:16px; color:#6E5D48;">the ever-present dead</div>
+          </div>
+          <div style="width:2px; height:26px; background:linear-gradient(#B4502A,#6F7A3A);"></div>
+          <div style="text-align:center; padding:16px 34px; border:2px solid #6F7A3A; background:rgba(111,122,58,.12);">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.16em; text-transform:uppercase; color:#5f6a2f;">The living community</div>
+            <div style="font-size:16px; color:#6E5D48;">elders · family · clan</div>
+          </div>
+          <div style="margin-top:20px; display:flex; gap:22px; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.04em;">
+            <span style="color:#B4502A;">↑ prayers &amp; offerings</span>
+            <span style="color:#6F7A3A;">↓ blessing &amp; protection</span>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(59,46,34,.14); padding-top:12px; text-align:center;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; color:#8a5a34; margin-bottom:4px;">Vital force · <span style="text-transform:none; font-style:italic;">-ntu</span></div>
+        <div style="font-size:15.5px; line-height:1.4; color:#6E5D48;">All beings share a life-energy that can be strengthened or diminished — binding the tiers into one moral order.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: practice -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-left:3px solid #8a5a34; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:100%; height:90px; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 38%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><ellipse cx="120" cy="50" rx="72" ry="22" fill="none" stroke="#64707a" stroke-width="1.4" stroke-dasharray="3 5" opacity="0.35"></ellipse><g stroke="#64707a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="94" cy="42" r="4" fill="none" data-a style="animation:ill-twinkle 2.4s ease-in-out infinite;"></circle><path d="M130 34 l6 8 -6 8 -6 -8 z" fill="#64707a" fill-opacity="0.16" data-a style="animation:ill-twinkle 2.4s .4s ease-in-out infinite;"></path><path d="M150 58 l11 -5" data-a style="animation:ill-twinkle 2.4s .8s ease-in-out infinite;"></path><rect x="132" y="54" width="8" height="8" fill="none" data-a style="animation:ill-twinkle 2.4s 1.2s ease-in-out infinite;"></rect><circle cx="108" cy="60" r="2.6" fill="#64707a" data-a style="animation:ill-twinkle 2.4s 1.6s ease-in-out infinite;"></circle></g></svg></div>
+        <div>
+          <h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Diviners &amp; healers</h3>
+          <p style="margin:7px 0 0; font-size:15px; line-height:1.4; color:#6E5D48;">Specialists read the causes of illness and misfortune and mediate with the spirit world.</p>
+          <div style="margin-top:9px; font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.06em; color:#8a5a34;">Nganga · Sangoma · Mganga</div>
+        </div>
+      </div>
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-left:3px solid #B4502A; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:100%; height:90px; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 38%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g fill="none" stroke="#B4502A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M108 24 C 104 30 106 40 120 42 C 134 40 136 30 132 24 Z" fill="#B4502A" fill-opacity="0.12"></path><path d="M108 24 C 113 21 127 21 132 24"></path><path d="M104 68 C 108 80 132 80 136 68"></path></g><g fill="#B4502A"><circle cx="120" cy="50" r="2.4" data-a style="animation:ill-drop 1.6s ease-in infinite;"></circle><circle cx="120" cy="50" r="2.4" data-a style="animation:ill-drop 1.6s .55s ease-in infinite;"></circle><circle cx="120" cy="50" r="2.4" data-a style="animation:ill-drop 1.6s 1.1s ease-in infinite;"></circle></g></svg></div>
+        <div>
+          <h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Ritual &amp; sacrifice</h3>
+          <p style="margin:7px 0 0; font-size:15px; line-height:1.4; color:#6E5D48;">Libations of beer, food offerings and cattle sacrifice honour ancestors and seal agreements.</p>
+        </div>
+      </div>
+      <div style="flex:1; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-left:3px solid #6F7A3A; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:100%; height:90px; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 38%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><path d="M24 60 Q 80 40 120 54 T 216 50" fill="none" stroke="#6F7A3A" stroke-width="2" stroke-linecap="round" opacity="0.5"></path><g fill="#6F7A3A"><circle cx="24" cy="60" r="4.4" data-a style="animation:ill-twinkle 2.8s ease-in-out infinite;"></circle><circle cx="88" cy="47" r="4.4" data-a style="animation:ill-twinkle 2.8s .55s ease-in-out infinite;"></circle><circle cx="152" cy="54" r="4.4" data-a style="animation:ill-twinkle 2.8s 1.1s ease-in-out infinite;"></circle><circle cx="216" cy="50" r="4.4" data-a style="animation:ill-twinkle 2.8s 1.65s ease-in-out infinite;"></circle></g></svg></div>
+        <div>
+          <h3 style="margin:0; font-size:21px; font-weight:600; color:#2E241B;">Rites of passage</h3>
+          <p style="margin:7px 0 0; font-size:15px; line-height:1.4; color:#6E5D48;">Birth, initiation, marriage and death mark a person's journey into — and beyond — the community.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid rgba(59,46,34,.2); padding-top:14px; font-size:16px; line-height:1.4; font-style:italic; color:#6E5D48;">Today most Bantu-speaking peoples are Christian or Muslim — yet reverence for ancestors and many of these ideas remain woven through everyday life.</div>
+</div>
+
+</div>
+<div class="page-wrap">
+<!-- ============ PAGE 04 · COUNTRY BY COUNTRY ============ -->
+<div data-screen-label="Country by Country" style="position:relative; width:1920px; height:1080px; background:#E9DEC7; background-image: radial-gradient(circle at 20% 15%, #EFE6D2 0%, #E4D8BF 58%, #DED0B3 100%); color:#3B2E22; font-family:'Spectral', Georgia, serif; overflow:hidden; padding:54px 60px 46px; display:flex; flex-direction:column; gap:16px;">
+  <div style="position:absolute; inset:26px; border:1px solid rgba(59,46,34,.16); pointer-events:none;"></div>
+  <div style="position:absolute; top:34px; right:38px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.28em; color:rgba(59,46,34,.45);">PEOPLES · ORIGIN · CULTURE · BELIEF</div>
+
+  <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:36px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span style="width:44px; height:2px; background:#B4502A;"></span>
+        <span style="font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:.42em; text-transform:uppercase; color:#8a5a34;">The Bantu world today</span>
+      </div>
+      <h1 style="margin:10px 0 0; font-size:56px; line-height:.96; font-weight:600; letter-spacing:-.01em; color:#2E241B;">Peoples, Country by Country</h1>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; max-width:640px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; color:#8a5a34;">What nearly all share</div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <span class="fact-chip" style="position:relative; display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:4px 12px; font-size:14.5px; color:#3B2E22; cursor:help;">Bantu language family<span style="display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; background:#B4502A; color:#F7EFE0; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; line-height:1;">i</span><span class="fact-pop" style="position:absolute; left:0; bottom:calc(100% + 9px); width:250px; background:#F5EDDD; border:1px solid rgba(59,46,34,.22); border-top:3px solid #B4502A; border-radius:6px; padding:11px 13px; font-size:13px; line-height:1.42; color:#5c4d3b; box-shadow:0 10px 24px rgba(59,46,34,.20); z-index:30;">They all speak related tongues from one branch of the Niger-Congo family — about 500 languages so alike they've been called “500 dialects of a single language.” Shared words are how scholars trace their common origin.</span></span>
+        <span class="fact-chip" style="position:relative; display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:4px 12px; font-size:14.5px; color:#3B2E22; cursor:help;">Farming + cattle<span style="display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; background:#B4502A; color:#F7EFE0; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; line-height:1;">i</span><span class="fact-pop" style="position:absolute; left:0; bottom:calc(100% + 9px); width:250px; background:#F5EDDD; border:1px solid rgba(59,46,34,.22); border-top:3px solid #B4502A; border-radius:6px; padding:11px 13px; font-size:13px; line-height:1.42; color:#5c4d3b; box-shadow:0 10px 24px rgba(59,46,34,.20); z-index:30;">They live by growing crops — yams, sorghum, millet, later maize — and keeping cattle, goats and sheep. A settled farming life, not hunting and gathering, which let their numbers grow.</span></span>
+        <span class="fact-chip" style="position:relative; display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:4px 12px; font-size:14.5px; color:#3B2E22; cursor:help;">Honouring ancestors<span style="display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; background:#B4502A; color:#F7EFE0; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; line-height:1;">i</span><span class="fact-pop" style="position:absolute; left:0; bottom:calc(100% + 9px); width:250px; background:#F5EDDD; border:1px solid rgba(59,46,34,.22); border-top:3px solid #B4502A; border-radius:6px; padding:11px 13px; font-size:13px; line-height:1.42; color:#5c4d3b; box-shadow:0 10px 24px rgba(59,46,34,.20); z-index:30;">The dead are believed to stay present, watching over the living family. They are remembered and thanked with offerings and prayers — the heart of traditional belief.</span></span>
+        <span class="fact-chip" style="position:relative; display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:4px 12px; font-size:14.5px; color:#3B2E22; cursor:help;">Clan &amp; lineage kinship<span style="display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; background:#B4502A; color:#F7EFE0; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; line-height:1;">i</span><span class="fact-pop" style="position:absolute; left:0; bottom:calc(100% + 9px); width:250px; background:#F5EDDD; border:1px solid rgba(59,46,34,.22); border-top:3px solid #B4502A; border-radius:6px; padding:11px 13px; font-size:13px; line-height:1.42; color:#5c4d3b; box-shadow:0 10px 24px rgba(59,46,34,.20); z-index:30;">Society is organised by descent: everyone belongs to a clan tracing back to a shared ancestor. These family lines decide land, marriage and who leads.</span></span>
+        <span class="fact-chip" style="position:relative; display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(59,46,34,.2); border-radius:20px; padding:4px 12px; font-size:14.5px; color:#3B2E22; cursor:help;">Iron farming tools<span style="display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; background:#B4502A; color:#F7EFE0; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; line-height:1;">i</span><span class="fact-pop" style="position:absolute; left:0; bottom:calc(100% + 9px); width:250px; background:#F5EDDD; border:1px solid rgba(59,46,34,.22); border-top:3px solid #B4502A; border-radius:6px; padding:11px 13px; font-size:13px; line-height:1.42; color:#5c4d3b; box-shadow:0 10px 24px rgba(59,46,34,.20); z-index:30;">They forged iron into hoes, axes and spears. Iron tools cleared forest and worked the soil far better than stone — a decisive edge as they spread.</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1; min-height:0; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:14px;">
+
+    <!-- Cameroon -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #C98A2E; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:22px; font-weight:600; color:#2E241B; line-height:1;">Cameroon</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Fang</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Bamileke</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Duala</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Beti</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><path d="M6 39 Q24 33 42 39" fill="none" stroke="#C98A2E" stroke-width="1.6" opacity="0.5"></path><g data-a style="animation:ill-sway 4s ease-in-out infinite; transform-origin:50% 100%;"><g fill="#C98A2E" fill-opacity="0.12" stroke="#C98A2E" stroke-width="2.2" stroke-linejoin="round"><path d="M11 38 L18 22 L25 38 Z"></path><path d="M24 38 L31 26 L38 38 Z"></path></g><g fill="none" stroke="#C98A2E" stroke-width="1.2" opacity="0.7"><path d="M14 32 H22"></path><path d="M27 33 H35"></path></g></g></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#b07a28; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">The Bantu cradle — the Grassfields highlands.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#b07a28; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Plantain &amp; cocoa farming; hilltop chiefdoms (fondoms) &amp; trade.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#b07a28; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity over ancestral &amp; nature spirits.</span></div>
+      </div>
+    </div>
+
+    <!-- DR Congo -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #B4502A; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:22px; font-weight:600; color:#2E241B; line-height:1;">DR Congo</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Kongo</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Luba</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Mongo</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Kuba</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><g fill="#B4502A" fill-opacity="0.12" stroke="#B4502A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M14 12 L7 30 H21 Z"></path><path d="M32 16 L26 31 H38 Z"></path></g><g stroke="#B4502A" stroke-width="2" stroke-linecap="round"><path d="M14 30 v4"></path><path d="M32 31 v4"></path></g><path d="M5 41 C 16 37 26 45 43 39" fill="none" stroke="#6f8296" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="6 6" style="animation:ill-dash 2.2s linear infinite;"></path></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Early western-stream settlers of forest &amp; savanna.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Forest &amp; river farming; the Kongo, Luba &amp; Kuba kingdoms.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity; Nzambi creator, nkisi &amp; ancestors.</span></div>
+      </div>
+    </div>
+
+    <!-- Angola -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #B4502A; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:22px; font-weight:600; color:#2E241B; line-height:1;">Angola</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Ovimbundu</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Mbundu</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Kongo</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><g data-a style="animation:ill-spin 28s linear infinite;"><g stroke="#B4502A" stroke-width="2" stroke-linecap="round"><path d="M24 6 V11"></path><path d="M24 25 V30"></path><path d="M9 18 H14"></path><path d="M34 18 H39"></path><path d="M13.5 7.5 l3.5 3.5"></path><path d="M31 25 l3.5 3.5"></path><path d="M34.5 7.5 l-3.5 3.5"></path><path d="M13.5 28.5 l3.5 -3.5"></path></g></g><circle cx="24" cy="18" r="6" fill="#B4502A" fill-opacity="0.85" data-a style="animation:ill-pulse 3.4s ease-in-out infinite;"></circle><g fill="none" stroke="#B4502A" stroke-width="2" stroke-linecap="round" opacity="0.8"><path d="M6 38 Q16 32 26 38 T44 36"></path><path d="M6 44 Q18 39 30 44 T46 42"></path></g></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Western stream onto highland &amp; coastal savanna.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Farming with cattle; long-distance trade caravans.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity with strong ancestral veneration.</span></div>
+      </div>
+    </div>
+
+    <!-- Kenya -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:22px; font-weight:600; color:#2E241B; line-height:1;">Kenya</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Kikuyu</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Kamba</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Luhya</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Meru</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><circle cx="37" cy="13" r="4.5" fill="#C98A2E" fill-opacity="0.85" data-a style="animation:ill-pulse 3.6s ease-in-out infinite;"></circle><path d="M6 38 L22 15 L38 38 Z" fill="#6F7A3A" fill-opacity="0.12" stroke="#6F7A3A" stroke-width="2.2" stroke-linejoin="round"></path><path d="M15 24 L22 15 L29 24 L25 27 L22 22 L18 27 Z" fill="#F4ECDC" stroke="#6F7A3A" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 39 H42" stroke="#8a5a34" stroke-width="1.6" opacity="0.5" stroke-linecap="round"></path></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Eastern arrivals in the highlands &amp; west, 1st mill. CE.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Kikuyu highland farmers · Kamba traders · Luhya cultivators.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity; the high-god Ngai on Mount Kenya. <em style="color:#8a5a34;">→ Fig. 05</em></span></div>
+      </div>
+    </div>
+
+    <!-- Tanzania -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:22px; font-weight:600; color:#2E241B; line-height:1;">Tanzania</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Sukuma</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Chaga</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Nyamwezi</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Haya</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><path d="M5 38 L15 20 L33 20 L43 38 Z" fill="#6F7A3A" fill-opacity="0.12" stroke="#6F7A3A" stroke-width="2.2" stroke-linejoin="round"></path><path d="M15 20 H33" stroke="#F4ECDC" stroke-width="2.4" stroke-linecap="round"></path><path d="M18 24 H30" stroke="#6F7A3A" stroke-width="1.3" stroke-linecap="round" opacity="0.7"></path><path d="M5 39 H43" stroke="#8a5a34" stroke-width="1.6" opacity="0.5" stroke-linecap="round"></path></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Blended eastern &amp; Great Lakes streams.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Sukuma herder-farmers · Chaga on Kilimanjaro · Nyamwezi caravans.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity &amp; Islam over ancestral ways.</span></div>
+      </div>
+    </div>
+
+    <!-- Great Lakes -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:19px; font-weight:600; color:#2E241B; line-height:1.04;">Uganda · Rwanda · Burundi</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Ganda</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Nyoro</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Nyankole</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Rundi</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><ellipse cx="24" cy="40" rx="17" ry="3.5" fill="#6f8296" fill-opacity="0.22" stroke="#6f8296" stroke-width="1.2" data-a style="animation:ill-pulse 4s ease-in-out infinite;"></ellipse><path d="M17 18 H31 L28 34 H20 Z" fill="#6F7A3A" fill-opacity="0.12" stroke="#6F7A3A" stroke-width="2.2" stroke-linejoin="round"></path><ellipse cx="24" cy="18" rx="7" ry="2.4" fill="none" stroke="#6F7A3A" stroke-width="2"></ellipse><g stroke="#6F7A3A" stroke-width="1.2" opacity="0.8"><path d="M17 22 L31 30"></path><path d="M31 22 L20 30"></path></g></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Interlacustrine Great Lakes; centralised kingdoms.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Banana farming &amp; cattle wealth; kingship (the Kabaka).</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity; creator Ruhanga / Imana + ancestors.</span></div>
+      </div>
+    </div>
+
+    <!-- Zambia belt -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #8a5a34; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:19px; font-weight:600; color:#2E241B; line-height:1.04;">Zambia · Zimbabwe · Malawi</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Bemba</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Tonga</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Shona</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Ndebele</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><g fill="#8a5a34" fill-opacity="0.10" stroke="#8a5a34" stroke-width="2" stroke-linejoin="round"><path d="M9 38 V24 H22 V38 Z"></path><path d="M27 38 V22 C27 18 35 18 35 22 V38 Z"></path></g><g stroke="#8a5a34" stroke-width="1.1" opacity="0.6"><path d="M9 29 H22"></path><path d="M9 33.5 H22"></path><path d="M27 28 H35"></path><path d="M27 32.5 H35"></path></g><path d="M6 39 H40" stroke="#8a5a34" stroke-width="1.6" opacity="0.5" stroke-linecap="round"></path></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#8a5a34; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Southern-central savanna; the Shona built Great Zimbabwe.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#8a5a34; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Farming &amp; cattle; chieftaincies, stone states, copper trade.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#8a5a34; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity; the Mwari cult &amp; vadzimu ancestors.</span></div>
+      </div>
+    </div>
+
+    <!-- South Africa -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #463829; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:19px; font-weight:600; color:#2E241B; line-height:1.04;">South Africa &amp; south</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Zulu</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Xhosa</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Sotho</span><span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Tswana</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><path d="M6 38 H42" stroke="#8a5a34" stroke-width="1.6" opacity="0.5" stroke-linecap="round"></path><g fill="#8a5a34" fill-opacity="0.12" stroke="#8a5a34" stroke-width="2" stroke-linejoin="round"><path d="M8 38 a7 7 0 0 1 14 0 Z"></path><path d="M26 38 a7 7 0 0 1 14 0 Z"></path><path d="M18 38 a6 6 0 0 1 12 0 Z"></path></g></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#7a5a44; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">The far southern frontier, c. 300–500 CE on.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#7a5a44; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Cattle chiefdoms; Nguni homesteads; sorghum &amp; maize.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#7a5a44; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Christianity; creator uNkulunkulu, amadlozi ancestors.</span></div>
+      </div>
+    </div>
+
+    <!-- Swahili -->
+    <div style="background:rgba(255,252,244,.55); border:1px solid rgba(59,46,34,.14); border-top:3px solid #64707a; padding:14px 16px; display:flex; flex-direction:column; gap:9px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="flex:1; min-width:0;">
+          <h3 style="margin:0; font-size:22px; font-weight:600; color:#2E241B; line-height:1;">Swahili coast</h3>
+          <div style="margin-top:7px; display:flex; flex-wrap:wrap; gap:5px;"><span style="border:1px solid rgba(100,112,122,.4); border-radius:20px; padding:2px 10px; font-size:12.5px; color:#3B2E22;">Swahili</span><span style="font-size:12px; font-style:italic; color:#7b8189; align-self:center;">Bantu + Arab · Persian · Indian</span></div>
+        </div>
+        <div style="width:74px; height:74px; flex:0 0 auto; border-radius:9px; overflow:hidden; background:radial-gradient(circle at 50% 42%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14); display:flex; align-items:center; justify-content:center;"><svg class="ill" viewBox="0 0 48 48" width="66" height="66"><g data-a style="animation:ill-bob 3s ease-in-out infinite;"><path d="M10 32 C 17 39 31 39 38 32 Z" fill="#64707a" fill-opacity="0.12" stroke="#64707a" stroke-width="2" stroke-linejoin="round"></path><path d="M24 32 V10" stroke="#64707a" stroke-width="2" stroke-linecap="round"></path><path d="M24 12 L24 30 L38 30 Z" fill="#64707a" fill-opacity="0.16" stroke="#64707a" stroke-width="2" stroke-linejoin="round"></path></g><g stroke="#6f8296" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="5 5" opacity="0.7" style="animation:ill-dash 2.4s linear infinite;"><path d="M6 40 H42"></path></g></svg></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#4f5a62; padding-top:2px;">Origin</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Bantu coast fused with Indian-Ocean traders, ~8th c.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#4f5a62; padding-top:2px;">Life</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Maritime city-states — Kilwa, Mombasa, Zanzibar, Lamu.</span></div>
+        <div style="display:flex; gap:9px;"><span style="flex:0 0 52px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#4f5a62; padding-top:2px;">Belief</span><span style="font-size:13px; line-height:1.3; color:#5c4d3b;">Predominantly Islam; a creole that varies along the shore.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+<div class="page-wrap">
+<!-- ============ PAGE 05 · THE KIKUYU & NGAI ============ -->
+<div data-screen-label="The Kikuyu & Ngai" style="position:relative; width:1920px; height:1080px; background:#E9DEC7; background-image: radial-gradient(circle at 30% 12%, #EFE6D2 0%, #E4D8BF 58%, #DBCCAE 100%); color:#3B2E22; font-family:'Spectral', Georgia, serif; overflow:hidden; padding:56px 62px 48px; display:flex; flex-direction:column; gap:22px;">
+  <div style="position:absolute; inset:26px; border:1px solid rgba(59,46,34,.16); pointer-events:none;"></div>
+  <div style="position:absolute; top:34px; right:38px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.28em; color:rgba(59,46,34,.45);">A CLOSER LOOK · KENYA</div>
+
+  <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span style="width:44px; height:2px; background:#B4502A;"></span>
+        <span style="font-family:'Barlow Condensed',sans-serif; font-size:16px; letter-spacing:.42em; text-transform:uppercase; color:#8a5a34;">Kenya's largest people · the Agĩkũyũ</span>
+      </div>
+      <h1 style="margin:10px 0 0; font-size:58px; line-height:.96; font-weight:600; letter-spacing:-.01em; color:#2E241B;">The Kikuyu &amp; Ngai</h1>
+    </div>
+    <p style="margin:0 0 6px; font-size:19px; line-height:1.4; font-style:italic; color:#6E5D48; max-width:600px; text-align:right;">How the Kikuyu explain their beginning, how they held their god — and why, within a century, most turned from the old faith.</p>
+  </div>
+
+  <div style="flex:1; min-height:0; display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:20px; align-items:stretch;">
+
+    <!-- COL A: origin -->
+    <div style="background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #C98A2E; padding:20px 22px; display:flex; flex-direction:column; gap:13px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34;">The origin story</div>
+      <div style="height:112px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 72% 32%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14);"><svg class="ill" viewBox="0 0 240 130" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g data-a style="animation:ill-spin 30s linear infinite;"><g stroke="#C98A2E" stroke-width="2.2" stroke-linecap="round"><path d="M212 40 H219"></path><path d="M208 50 l5 5"></path><path d="M198 54 V61"></path><path d="M188 50 l-5 5"></path><path d="M184 40 H177"></path><path d="M188 30 l-5 -5"></path><path d="M198 26 V19"></path><path d="M208 30 l5 -5"></path></g></g><circle cx="198" cy="40" r="10" fill="#C98A2E" fill-opacity="0.85" data-a style="animation:ill-pulse 3.6s ease-in-out infinite;"></circle><path d="M118 118 L162 70 L206 118 Z" fill="#C98A2E" fill-opacity="0.06" stroke="#C98A2E" stroke-width="1.6" opacity="0.6"></path><path d="M26 118 L104 40 L182 118 Z" fill="#C98A2E" fill-opacity="0.10" stroke="#C98A2E" stroke-width="2.4" stroke-linejoin="round"></path><path d="M88 56 L104 40 L120 56 L112 61 L104 53 L96 61 Z" fill="#F4ECDC" stroke="#C98A2E" stroke-width="1.4" stroke-linejoin="round"></path><path d="M10 118 H230" stroke="#8a5a34" stroke-width="2" stroke-linecap="round" opacity="0.5"></path><path d="M214 118 V104" stroke="#7a5a3a" stroke-width="2.4" stroke-linecap="round"></path><circle cx="214" cy="98" r="8" fill="#6F7A3A" fill-opacity="0.18" stroke="#6F7A3A" stroke-width="1.8"></circle></svg></div>
+      <p style="margin:0; font-size:15px; line-height:1.46; color:#463829;">When the world was young, Ngai — the Divider of the Universe — carried <strong style="font-weight:600;">Gĩkũyũ</strong>, the first man, to the glittering summit of Mount Kenya. Sweeping a hand across the ridges, forests and rivers below, he gave the whole land to Gĩkũyũ's children, and sent him down to settle where the fig trees grew. There Ngai granted him a wife, <strong style="font-weight:600;">Mũmbi</strong> — "the moulder" — who bore nine daughters but no son. In his need Gĩkũyũ prayed beneath a sacred mũgumo fig; Ngai answered, and nine young men stood waiting by the tree to marry them. From these unions rose the nine clans from whom every Kikuyu descends.</p>
+      <div style="margin-top:auto;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:#8a5a34; margin-bottom:8px;">The nine clans · mĩhĩrĩga</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Achera</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Agachikũ</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Airimũ</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Ambũi</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Angare</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Anjirũ</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Angũi</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Aithaga</span>
+          <span style="border:1px solid rgba(59,46,34,.22); border-radius:20px; padding:3px 11px; font-size:13px; color:#3B2E22;">Aithĩrandũ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL B: Ngai -->
+    <div style="background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #B4502A; padding:20px 22px; display:flex; flex-direction:column; gap:12px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34;">Ngai &amp; the sacred order</div>
+      <div style="height:128px; flex:0 0 auto; border-radius:10px; overflow:hidden; background:radial-gradient(circle at 50% 34%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.14);"><svg class="ill" viewBox="0 0 240 130" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g data-a style="animation:ill-spin 34s linear infinite;"><g stroke="#C98A2E" stroke-width="2" stroke-linecap="round"><path d="M150 52 H158"></path><path d="M141 73 l5 6"></path><path d="M120 82 V90"></path><path d="M99 73 l-5 6"></path><path d="M90 52 H82"></path><path d="M99 31 l-5 -6"></path><path d="M120 22 V14"></path><path d="M141 31 l5 -6"></path></g></g><circle cx="120" cy="52" r="12" fill="#C98A2E" fill-opacity="0.45" data-a style="animation:ill-pulse 4s ease-in-out infinite;"></circle><g data-a style="animation:ill-sway 5s ease-in-out infinite; transform-origin:50% 100%;" fill="#6F7A3A" fill-opacity="0.16" stroke="#6F7A3A" stroke-width="2"><circle cx="120" cy="52" r="26"></circle><circle cx="98" cy="62" r="17"></circle><circle cx="142" cy="62" r="17"></circle><circle cx="108" cy="44" r="15"></circle><circle cx="132" cy="44" r="15"></circle></g><g fill="none" stroke="#7a5a3a" stroke-width="3" stroke-linecap="round"><path d="M120 122 V78"></path><path d="M120 92 l-12 -9"></path><path d="M120 98 l12 -9"></path></g><path d="M14 122 H226" stroke="#8a5a34" stroke-width="2" stroke-linecap="round" opacity="0.5"></path><path d="M150 112 C 147 116 148 123 156 124 C 164 123 165 116 162 112 Z" fill="#B4502A" fill-opacity="0.16" stroke="#B4502A" stroke-width="1.6" stroke-linejoin="round"></path></svg></div>
+      <p style="margin:0; font-size:15.5px; line-height:1.48; color:#463829;">Ngai — also <strong style="font-weight:600;">Mwene-Nyaga</strong>, "owner of brightness" — is the sole creator, dwelling on <strong style="font-weight:600;">Kĩrĩnyaga</strong>, Mount Kenya, whose snow-bright peak is his seat.</p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:1px;">
+        <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:8px; height:8px; margin-top:6px; background:#B4502A;"></span><span style="font-size:14.5px; line-height:1.38; color:#5c4d3b;">Ngai also rested on four sacred mountains ringing the land, watching over it from each horizon.</span></div>
+        <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:8px; height:8px; margin-top:6px; background:#B4502A;"></span><span style="font-size:14.5px; line-height:1.38; color:#5c4d3b;">Homes and graves faced the peak; prayers were made turning toward it.</span></div>
+        <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:8px; height:8px; margin-top:6px; background:#B4502A;"></span><span style="font-size:14.5px; line-height:1.38; color:#5c4d3b;">In drought or crisis, elders sacrificed a ram beneath a sacred <strong style="font-weight:600;">mũgumo</strong> (fig) tree.</span></div>
+        <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:8px; height:8px; margin-top:6px; background:#B4502A;"></span><span style="font-size:14.5px; line-height:1.38; color:#5c4d3b;">The ancestral spirits (ngoma) stayed close, honoured with libations of gruel and beer.</span></div>
+        <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:8px; height:8px; margin-top:6px; background:#B4502A;"></span><span style="font-size:14.5px; line-height:1.38; color:#5c4d3b;">No temples, no priests: senior elders (kiama) and age-sets (riika) carried the faith.</span></div>
+      </div>
+    </div>
+
+    <!-- COL C: why faded -->
+    <div style="background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #64707a; padding:20px 22px; display:flex; flex-direction:column; gap:12px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#4f5a62;">Why the old faith faded</div>
+      <div style="font-size:14.5px; line-height:1.48; color:#463829; display:flex; flex-direction:column; gap:9px;">
+        <p style="margin:0;"><em style="color:#6E5D48;">For most of this story Kenya was not its own country. From the 1890s it was ruled by Britain, whose officials and white "settler" farmers took much of the fertile Kikuyu highlands for themselves.</em></p>
+        <p style="margin:0;"><strong style="font-weight:600; color:#2E241B;">The mission was the only door in.</strong> Under British rule the church controlled the one road into the new world: missions ran the schools, taught reading and English, staffed the clinics, and issued the papers needed for wages and work. To get ahead a young Kikuyu had to pass through a mission — and schooling came bundled with baptism.</p>
+        <p style="margin:0;"><strong style="font-weight:600; color:#2E241B;">Converts made it their own.</strong> When missionaries attacked old customs — above all female initiation, a coming-of-age rite, in the bitter 1929 "circumcision controversy" — many Kikuyu walked out and founded their <em>own</em> independent African churches and schools, keeping Christianity but shedding the settler.</p>
+        <p style="margin:0;"><strong style="font-weight:600; color:#2E241B;">Why it never reversed.</strong> Then came the Mau Mau uprising (1952–60) — a mostly-Kikuyu armed revolt against British rule and land theft, brutally crushed, which uprooted communities into guarded villages. By independence in 1963, when Kenya finally became a free nation, a whole generation had grown up Christian, literate and urban. There was little to return to: the old faith had no scripture, priests or temples — only elders' memory, now broken. And Ngai had quietly become the Christian God, so people felt they had deepened their faith, not swapped it. Mount Kenya keeps its awe to this day.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:0 0 auto; background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #C98A2E; padding:15px 20px;">
+    <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:11px;">
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#8a5a34;">Curiosities</span>
+      <span style="font-size:14px; font-style:italic; color:#8a7d68;">The origin account is oral tradition — told in many versions, some naming a tenth daughter.</span>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
+      <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:4px; background:#C98A2E; transform:rotate(45deg);"></span><div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:#b07a28; margin-bottom:2px;">The name "Kenya"</div><div style="font-size:14px; line-height:1.4; color:#5c4d3b;">Comes from the Kikuyu holy mountain, <strong style="font-weight:600;">Kĩrĩnyaga</strong> — where the ĩ sounds like an English "e". A missionary in 1849 wrote it as "Kenia," which settled into Ke-nya.</div></div></div>
+      <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:4px; background:#6F7A3A; transform:rotate(45deg);"></span><div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:#5f6a2f; margin-bottom:2px;">"Gĩkũyũ" = the fig</div><div style="font-size:14px; line-height:1.4; color:#5c4d3b;">The people's name comes from <strong style="font-weight:600;">mũkũyũ</strong>, the sacred sycamore-fig — Agĩkũyũ ≈ "children of the great fig tree."</div></div></div>
+      <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:4px; background:#B4502A; transform:rotate(45deg);"></span><div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:#B4502A; margin-bottom:2px;">Snow on the equator</div><div style="font-size:14px; line-height:1.4; color:#5c4d3b;"><strong style="font-weight:600;">Kĩrĩnyaga</strong> means "place of brightness" — real glaciers crown the peak, ice on the equator, atop the very mountain the Kikuyu hold as Ngai's home.</div></div></div>
+      <div style="display:flex; gap:11px; align-items:flex-start;"><span style="flex:0 0 auto; width:9px; height:9px; margin-top:4px; background:#64707a; transform:rotate(45deg);"></span><div><div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:#4f5a62; margin-bottom:2px;">Facing Mount Kenya</div><div style="font-size:14px; line-height:1.4; color:#5c4d3b;">Jomo Kenyatta, Kenya's first president and a Kikuyu, titled his 1938 study of Kikuyu life <em>Facing Mount Kenya</em>.</div></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="page-wrap">
+<!-- ============ PAGE 06 · HOW WE KNOW ============ -->
+<div data-screen-label="How We Know" style="position:relative; width:1920px; height:1080px; background:#E9DEC7; background-image: radial-gradient(circle at 78% 14%, #EFE6D2 0%, #E4D8BF 58%, #DED0B3 100%); color:#3B2E22; font-family:'Spectral', Georgia, serif; overflow:hidden; padding:58px 66px 50px; display:flex; flex-direction:column; gap:22px;">
+  <div style="position:absolute; inset:26px; border:1px solid rgba(59,46,34,.16); pointer-events:none;"></div>
+  <div style="position:absolute; top:34px; right:38px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.28em; color:rgba(59,46,34,.45);">EVIDENCE · INTERPRETATION · DEBATE</div>
+
+  <div>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span style="width:44px; height:2px; background:#B4502A;"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:.42em; text-transform:uppercase; color:#8a5a34;">Reading a migration with no records</span>
+    </div>
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-top:12px;">
+      <h1 style="margin:0; font-size:60px; line-height:.96; font-weight:600; letter-spacing:-.01em; color:#2E241B;">How We Know — &amp; Why It Matters</h1>
+      <p style="margin:0 0 6px; font-size:19px; line-height:1.4; font-style:italic; color:#6E5D48; max-width:620px; text-align:right;">The Bantu left no written records. So how do we know any of this? The story is rebuilt from language, bones and DNA — and geography explains who spread, and who did not.</p>
+    </div>
+  </div>
+
+  <div style="flex:1; min-height:0; display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:stretch;">
+
+    <!-- A: reading a silent past -->
+    <div style="background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #6F7A3A; padding:18px 22px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#5f6a2f;">Reading a silent past</div>
+      <div style="height:88px; flex:0 0 auto; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 40%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g stroke="#6F7A3A" fill="none" stroke-width="2" stroke-linecap="round"><path d="M120 80 V56"></path><path d="M120 56 C 100 48 78 42 60 34"></path><path d="M120 56 C 110 44 104 34 100 26"></path><path d="M120 56 C 130 44 136 34 140 26"></path><path d="M120 56 C 140 48 162 42 180 34"></path></g><g fill="#6F7A3A"><circle cx="120" cy="82" r="4"></circle><circle cx="60" cy="32" r="3.6" data-a style="animation:ill-twinkle 3s ease-in-out infinite;"></circle><circle cx="100" cy="24" r="3.6" data-a style="animation:ill-twinkle 3s .4s ease-in-out infinite;"></circle><circle cx="140" cy="24" r="3.6" data-a style="animation:ill-twinkle 3s .8s ease-in-out infinite;"></circle><circle cx="180" cy="32" r="3.6" data-a style="animation:ill-twinkle 3s 1.2s ease-in-out infinite;"></circle></g></svg></div>
+      <div style="font-size:15px; line-height:1.56; color:#463829; display:flex; flex-direction:column; gap:11px;">
+        <p style="margin:0;">The Bantu left no written records. So their story is pieced together from three clues — <strong style="font-weight:600; color:#2E241B;">language, buried remains and DNA</strong> — that all point the same way.</p>
+        <p style="margin:0;"><strong style="font-weight:600; color:#2E241B;">Language points home.</strong> A language family usually began where its branches differ most from each other — and the Bantu tongues differ most on the Cameroon–Nigeria border. So that is where they started. The roughly 500 languages that grew from it are still so alike they've been called “500 dialects of one language.”</p>
+        <p style="margin:0;"><strong style="font-weight:600; color:#2E241B;">The ground agrees.</strong> New kinds of village — with pottery, iron and grain — appear across the south along the same trail. And language keeps a vivid trace of who was there first: the Zulu and Xhosa picked up the clicking sounds of the Khoisan peoples they mixed with. Xhosa still has 18 click sounds, in about one word in ten.</p>
+      </div>
+    </div>
+
+    <!-- B: the engine -->
+    <div style="background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #B4502A; padding:18px 22px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#B4502A;">The engine of the spread</div>
+      <div style="height:88px; flex:0 0 auto; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 40%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><g data-a style="animation:ill-spin 12s linear infinite;"><g stroke="#B4502A" stroke-width="3" stroke-linecap="round"><path d="M100 30 V22"></path><path d="M100 68 V60"></path><path d="M78 45 H70"></path><path d="M130 45 H122"></path><path d="M84.6 29.6 l-5.6 -5.6"></path><path d="M121 66 l5.6 5.6"></path><path d="M126.6 24 l-5.6 5.6"></path><path d="M79 66 l5.6 -5.6"></path></g><circle cx="100" cy="45" r="15" fill="none" stroke="#B4502A" stroke-width="3"></circle></g><circle cx="100" cy="45" r="5" fill="#B4502A"></circle><path d="M170 66 V48" data-a style="animation:ill-grow 3.4s ease-in-out infinite; transform-origin:50% 100%;" fill="none" stroke="#6F7A3A" stroke-width="2" stroke-linecap="round"></path><g fill="#6F7A3A" data-a style="animation:ill-sway 3.4s ease-in-out infinite; transform-origin:50% 100%;"><path d="M170 52 C 164 50 161 53 160 57 C 165 57 169 56 170 52 Z"></path><path d="M170 56 C 176 54 179 57 180 61 C 175 61 171 60 170 56 Z"></path></g></svg></div>
+      <div style="font-size:15px; line-height:1.56; color:#463829; display:flex; flex-direction:column; gap:11px;">
+        <p style="margin:0;">Why did the Bantu spread so far, when the hunter-gatherers they met did not? Not because they were stronger — but because <strong style="font-weight:600; color:#2E241B;">geography handed them a head start</strong>.</p>
+        <p style="margin:0;">Every African crop — yams, oil palm, sorghum, millet — was first farmed north of the equator; the south had none worth growing. The Bantu brought these crops with them, and farming feeds far more people than hunting. Iron came only later, around 400 BC, after they were already on the move. It was crops and numbers, not weapons, that did the real work.</p>
+        <p style="margin:0;">Disease helped too. Malaria spread around their villages, and the Bantu had a natural resistance to it that others lacked. Better fed and far more numerous, they did not so much conquer the older Africa as slowly outgrow and absorb it.</p>
+      </div>
+    </div>
+
+    <!-- C: bigger picture -->
+    <div style="background:rgba(255,252,244,.5); border:1px solid rgba(59,46,34,.14); border-top:3px solid #64707a; padding:18px 22px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:.22em; text-transform:uppercase; color:#4f5a62;">The bigger picture</div>
+      <div style="height:88px; flex:0 0 auto; border-radius:8px; overflow:hidden; background:radial-gradient(circle at 50% 40%, #F4ECDC, #E1D3B6); border:1px solid rgba(59,46,34,.12);"><svg class="ill" viewBox="0 0 240 90" width="100%" height="100%" preserveAspectRatio="xMidYMid meet"><path d="M120 18 V72" stroke="#64707a" stroke-width="2.4" stroke-linecap="round"></path><path d="M113 25 L120 16 L127 25" fill="none" stroke="#64707a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M113 65 L120 74 L127 65" fill="none" stroke="#64707a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path><g stroke="#B4502A" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4" opacity="0.65"><path d="M90 37 H150" data-a style="animation:ill-twinkle 3s ease-in-out infinite;"></path><path d="M90 53 H150" data-a style="animation:ill-twinkle 3s .6s ease-in-out infinite;"></path></g><g fill="#64707a" font-family="'Barlow Condensed',sans-serif" font-size="11" font-weight="600" text-anchor="middle"><text x="120" y="12">N</text><text x="120" y="87">S</text></g></svg></div>
+      <div style="font-size:15px; line-height:1.56; color:#463829; display:flex; flex-direction:column; gap:11px;">
+        <p style="margin:0;">Step back, and the Bantu expansion is one of the <strong style="font-weight:600; color:#2E241B;">great migrations of human prehistory</strong> — one of the clearest cases anywhere of farmers spreading out and replacing hunter-gatherers across a whole continent.</p>
+        <p style="margin:0;">But it was neither smooth nor unstoppable. Africa runs north–south, so the migrants kept entering new climates where their crops struggled. The wave surged, stalled, even collapsed in the Congo around AD 400 before starting again. At the Cape it stopped for good: there the rain falls in winter, and their summer crops simply would not grow.</p>
+        <p style="margin:0;">Where the frontier stopped still matters today. The Xhosa settled at the Fish River; when European settlers reached them, it took nine wars over 175 years to defeat them — a struggle that runs straight into the history of modern South Africa.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:0 0 auto; display:flex; gap:14px; align-items:flex-start; background:rgba(255,252,244,.42); border:1px solid rgba(59,46,34,.14); border-left:3px solid #8a5a34; padding:14px 20px;">
+    <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; color:#8a5a34; flex:0 0 auto; padding-top:2px;">Sources &amp; scholarship</span>
+    <span style="font-size:14.5px; line-height:1.42; font-style:italic; color:#6E5D48;">This account combines the classic environmental argument of Jared Diamond's <em>Guns, Germs, and Steel</em> (1997) with more recent linguistic, archaeological and DNA research, which favours a later, staged expansion and a smaller role for iron. The broad story is well established; exact dates and routes are still actively debated.</span>
+  </div>
+</div>
+</div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1920, &quot;height&quot;: 1080 },
+  &quot;showTimeline&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot; },
+  &quot;showModernHints&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Map&quot; },
+  &quot;homelandEmphasis&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Map&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showTimeline: this.props.showTimeline ?? true,
+      showModernHints: this.props.showModernHints ?? true,
+      homelandEmphasis: this.props.homelandEmphasis ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>
