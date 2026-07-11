@@ -1,7 +1,7 @@
 // Små, rammeverk-uavhengige finesser som Blazor ikke gjør selv:
 //  1) språkhjelpere (localStorage + nettleserspråk) som .NET leser ved oppstart
 //  2) en hilsen i nettleserkonsollen til nysgjerrige som åpner DevTools
-//  3) en global hurtigtast (backtick / den fysiske Backquote-tasten) for terminalen
+//  3) en global hurtigtast (Ctrl+\) for terminalen
 //  4) en «matrix»-regn-effekt som terminalkommandoen `matrix` kaller
 (function () {
     // 1) Språk ---------------------------------------------------------------
@@ -26,18 +26,19 @@
         "%claget%c.%cno",
         big + "color:#e5e9f0", big + "color:#fea55f", big + "color:#e5e9f0");
     var hint = currentLang() === "en"
-        ? "psst — press  `  (backtick) anywhere for a surprise 🤓"
-        : "psst — trykk  `  (backtick) hvor som helst for en overraskelse 🤓";
+        ? "psst — press Ctrl+\\ anywhere for a surprise 🤓"
+        : "psst — trykk Ctrl+\\ hvor som helst for en overraskelse 🤓";
     console.log("%c" + hint, "color:#43d9ad;font:14px 'Fira Code',monospace");
 
-    // 3) Global hurtigtast for terminalen -----------------------------------
-    // e.code === "Backquote" er den FYSISKE tasten (venstre for 1 / over Tab)
-    // uavhengig av tastaturlayout — så den funker også på norsk tastatur der
-    // selve backtick-tegnet ligger bak AltGr / er en død tast.
+    // 3) Global hurtigtast for terminalen: Ctrl+\ ----------------------------
+    // Layout-robust: e.key === "\\" treffer uansett hvor \ bor på tastaturet.
+    // På norsk layout er \ AltGr+7, og AltGr sender Ctrl — så AltGr+7 holder.
+    // e.code-sjekkene fanger den fysiske \-tasten på US-/ISO-oppsett.
     document.addEventListener("keydown", function (e) {
         var t = e.target;
         var typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
-        if ((e.key === "`" || e.code === "Backquote") && !typing) {
+        var backslash = e.key === "\\" || e.code === "Backslash" || e.code === "IntlBackslash";
+        if (e.ctrlKey && backslash && !typing) {
             e.preventDefault();
             if (window.DotNet) {
                 DotNet.invokeMethodAsync("LagetWeb", "Toggle");

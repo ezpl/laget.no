@@ -12,14 +12,14 @@ Live: <https://www.laget.no> · Repo: <https://github.com/ezpl/laget.no>
 src/laget-web/            Blazor WASM-app (startsiden = "skallet")
   Pages/                  _hei (Home), _tema, _om-siden, _kontakt
   Components/Snake.razor  snake-spillet (ren C#)
-  Components/Konsoll.razor skjult terminal (easter egg) — trykk ` (backtick)
+  Components/Konsoll.razor skjult terminal (easter egg) — Ctrl+\
   KonsollBus.cs           bro fra JS-hurtigtast til terminal-komponenten
   Services/LangService.cs språk (nb/en): valg, persistens, nettleser-standard
   LocalizedComponentBase.cs  basisklasse: injiserer Lang + re-render ved bytte
   Layout/MainLayout.razor faner (topp) + språkvelger + statuslinje (bunn)
   Models/Tema.cs          register: temaer + 0z0-apper (lokalisert) — én kilde
   wwwroot/                index.html, css/app.css (Grafitt-tema)
-  wwwroot/js/laget.js     språkhjelpere, konsoll-hilsen, backtick, matrix
+  wwwroot/js/laget.js     språkhjelpere, konsoll-hilsen, Ctrl+\-hurtigtast, matrix
 static/
   bantu-expansion/        tema: Bantu & kikuyu (selvstendig statisk infografikk)
 .github/workflows/deploy.yml   bygger + deployer til GitHub Pages ved push til main
@@ -77,7 +77,8 @@ Appen publiseres med `InvariantGlobalization` (dropper ICU-globaliseringsdata,
 
 ### Påskeegg 🥚
 
-Trykk `` ` `` (backtick) hvor som helst — eller `>_` i statuslinja — for en
+Trykk `Ctrl+\` hvor som helst (AltGr+7 gir også `\` på norsk tastatur) —
+eller `>_` i statuslinja — for en
 skjult terminal med kommandoer (`help`, `ls`, `open <tema>`, `matrix`, …).
 Skrevet i C#; kommandotolkeren ligger i `Components/Konsoll.razor`. Åpne også
 DevTools-konsollen for en hilsen.
