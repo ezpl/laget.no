@@ -7,12 +7,12 @@
 <div class="hei">
 
     <section>
-        <p class="eyebrow">@Lang.T("// ett tema om gangen, gjort ordentlig", "// one topic at a time, done properly")</p>
+        <p class="eyebrow">@Lang.T("// svar på spørsmål stort sett ingen har stilt", "// answers to questions mostly nobody asked")</p>
         <h1 class="hero">laget<span class="dot">.</span>no</h1>
         <p class="hero-sub"><span class="prompt">&gt;</span> @Lang.T("informasjon & nyttige ting", "information & useful things")</p>
 
         <div class="codeblock">
-            <span class="ln comment">@Lang.T("// temaene på siden — åpne en under _tema", "// topics on the site — open one under _topics")</span>
+            <span class="ln comment">@Lang.T("// temaene på siden — åpne et under _tema", "// topics on the site — open one under _topics")</span>
             <span class="ln"><span class="prompt">const</span> <span class="green">tema</span> = [</span>
             @foreach (var t in Temaer.Alle.Where(t => t.Publisert))
             {

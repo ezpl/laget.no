@@ -37,9 +37,9 @@ public static class Temaer
             Tag: new Ls("historie & språk", "history & language"),
             Beskrivelse: new Ls(
                 "Bantu-ekspansjonen — en av historiens største folkevandringer. "
-              + "Kart, tidslinje, språk, tro og kikuyufolket, som infografikk.",
+              + "Kart, tidslinje, språk, tro og kikuyufolket, presentert som infografikk.",
                 "The Bantu expansion — one of history's great migrations. "
-              + "Map, timeline, language, belief and the Kikuyu people, as an infographic."),
+              + "Map, timeline, language, belief and the Kikuyu people, presented as an infographic."),
             Href: "bantu-expansion/",
             Ekstern: true),
         new Tema(

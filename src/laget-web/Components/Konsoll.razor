@@ -50,7 +50,7 @@
         KonsollBus.ToggleRequested += Toggle;
         Lang.OnChange += OnLangChanged;
         Print(Lang.T(
-            "laget.no terminal — skriv <span class=\"a\">help</span> for kommandoer. Lukk med <span class=\"a\">Esc</span>.",
+            "laget.no-terminalen — skriv <span class=\"a\">help</span> for kommandoer. Lukk med <span class=\"a\">Esc</span>.",
             "laget.no terminal — type <span class=\"a\">help</span> for commands. Close with <span class=\"a\">Esc</span>."),
             "muted");
     }
@@ -116,14 +116,14 @@
             case "hjelp":
                 Print(Lang.T("tilgjengelige kommandoer:", "available commands:"), "muted");
                 Print("  <span class=\"a\">help</span>       " + Lang.T("denne lista", "this list"));
-                Print("  <span class=\"a\">ls</span>         " + Lang.T("list temaene", "list the topics"));
+                Print("  <span class=\"a\">ls</span>         " + Lang.T("list opp temaene", "list the topics"));
                 Print("  <span class=\"a\">apper</span>      " + Lang.T("nyttige applikasjoner", "useful applications"));
                 Print("  <span class=\"a\">open</span> &lt;navn&gt; " + Lang.T("åpne et tema", "open a topic")
                     + " (<span class=\"a\">open bantu-kikuyu</span>)");
                 Print("  <span class=\"a\">whoami</span>     " + Lang.T("hvem er du", "who you are"));
                 Print("  <span class=\"a\">uname</span>      " + Lang.T("hva siden kjører på", "what the site runs on"));
                 Print("  <span class=\"a\">date</span>       " + Lang.T("klokka nå", "the time now"));
-                Print("  <span class=\"a\">echo</span> &lt;tekst&gt; " + Lang.T("skriv tilbake", "echo back"));
+                Print("  <span class=\"a\">echo</span> &lt;tekst&gt; " + Lang.T("gjenta teksten", "echo back"));
                 Print("  <span class=\"a\">snake</span>      🐍");
                 Print("  <span class=\"a\">matrix</span>     " + Lang.T("følg den hvite kaninen", "follow the white rabbit"));
                 Print("  <span class=\"a\">github</span> · <span class=\"a\">discord</span>   " + Lang.T("finn meg", "find me"));
@@ -185,7 +185,7 @@
                 break;
 
             case "snake":
-                Print(Lang.T("🐍 slangen bor på forsiden — piltaster styrer. Lykke til!",
+                Print(Lang.T("🐍 slangen bor på forsiden — piltastene styrer. Lykke til!",
                              "🐍 the snake lives on the home page — arrow keys steer. Good luck!"));
                 break;
 
